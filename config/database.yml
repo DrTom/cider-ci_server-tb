@@ -1,0 +1,26 @@
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: localhost
+  pool: 3
+  username: postgres
+  password:
+ 
+development:
+  <<: *default
+  database: domina_ci_dev
+
+test: &test
+  <<: *default
+  database: domina_ci_test
+
+staging:
+  <<: *default
+  database: domina_ci_staging
+  pool: 5
+
+production:
+  <<: *default
+  database: domina_ci_prod
+  pool: 10
