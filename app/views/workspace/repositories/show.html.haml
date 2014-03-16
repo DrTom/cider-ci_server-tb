@@ -1,0 +1,22 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- repository = @repository
+%h1= repository.name
+
+%ul.list-inline
+  %li= render 'workspace/repositories/state', repository: repository
+  %li updated repository #{render "humanized_time_from_now", at: repository.git_updated_at} 
+  %li updated branches #{render "humanized_time_from_now", at: repository.branches_updated_at}
+
+
+%h2 Branches
+
+%table.table.table-striped
+  %thead
+  %tbody
+    - repository.branches.reorder(updated_at: :desc) do |branch|
+      %tr.branch-row
+        %td= branch.name
+

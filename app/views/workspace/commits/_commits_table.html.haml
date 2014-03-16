@@ -1,0 +1,16 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- commits ||= @commits
+- link_params ||= @link_params
+
+- cache @commits_cache_signatures_array do 
+
+  - table_reload_cache_signature = Digest::MD5.hexdigest(commits.map(&:id).to_s)
+  %table.commits.table.table-striped{data:{reload:{enabled: true, delay: 60, path: workspace_commits_path(link_params),partial: 'commits_table', cache_tag: table_reload_cache_signature}}}
+    %thead
+    %tbody
+      =render partial: 'commit_tr', collection: commits, as: :commit
+
+

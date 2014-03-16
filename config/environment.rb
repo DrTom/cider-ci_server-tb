@@ -2,4 +2,4 @@
 require File.expand_path('../application', __FILE__)
 
 # Initialize the rails application.
-DominaCI::Application.initialize!
+CiderCI::Application.initialize!

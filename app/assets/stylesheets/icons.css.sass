@@ -1,0 +1,134 @@
+@import 'spin_cc'
+@import 'pulse'
+
+@mixin font-awesome
+  display: inline-block
+  font-family: FontAwesome
+  font-style: normal
+  font-weight: normal
+  line-height: 1
+  -webkit-font-smoothing: antialiased
+  -moz-osx-font-smoothing: grayscale
+
+
+.icon-add:before, .icon-branch-heads:before
+  @include font-awesome
+  content: $fa-var-plus-circle
+
+.icon-admin:before
+  @include font-awesome
+  content: $fa-var-user-md
+
+.icon-branch-head:before, .icon-branch-heads:before
+  @include font-awesome
+  content: $fa-var-sitemap
+
+.icon-bitbucket:before
+  @include font-awesome
+  content: $fa-var-bitbucket
+
+.icon-checked:before
+  @include font-awesome
+  content: $fa-var-check
+
+.icon-commit:before, .icon-commits:before
+  @include font-awesome
+  content: $fa-var-code-fork
+
+.icon-delete:before
+  @include font-awesome
+  content: $fa-var-trash-o
+
+.icon-edit:before
+  @include font-awesome
+  content: $fa-var-pencil
+
+.icon-execution:before, .icon-executions:before
+  @include font-awesome
+  content: $fa-var-cog
+
+.icon-executing:before,
+  @include font-awesome
+  @include spin-clockwise
+  content: $fa-var-cog
+
+.icon-executor:before
+  @include font-awesome
+  content: $fa-var-cogs
+
+.icon-failed:before
+  @include font-awesome
+  content: $fa-var-frown-o
+
+.icon-filter:before
+  @include font-awesome
+  content: $fa-var-filter
+
+.icon-github:before
+  @include font-awesome
+  content: $fa-var-github
+
+.icon-offline:before
+  @include font-awesome
+  content: $fa-var-heart-o
+
+.icon-online:before
+  @include font-awesome
+  @include pulse
+  content: $fa-var-heart
+
+.icon-pending:before
+  @include font-awesome
+  @include spin-counter-clockwise
+  content: $fa-var-spinner
+
+.icon-repository:before
+  @include font-awesome
+  content: $fa-var-archive
+
+.icon-retry:before
+  @include font-awesome
+  content: $fa-var-repeat
+
+.icon-sign-in:before
+  @include font-awesome
+  content: $fa-var-sign-in
+
+.icon-sign-out:before
+  @include font-awesome
+  content: $fa-var-sign-out
+
+.icon-success:before
+  @include font-awesome
+  content: $fa-var-smile-o
+
+.icon-tag:before
+  @include font-awesome
+  content: $fa_var-tag
+
+.icon-tags:before
+  @include font-awesome
+  content: $fa_var-tags
+
+.icon-trial:before
+  @include font-awesome
+  content: $fa-var-question-circle
+
+.icon-trigger:before
+  @include font-awesome
+  content: $fa-var-lightbulb-o
+
+.icon-unchecked:before
+  @include font-awesome
+  content: $fa-var-minus
+
+.icon-user:before
+  @include font-awesome
+  content: $fa-var-user
+
+.icon-warning:before
+  @include font-awesome
+  content: $fa-var-exclamation-triangle
+
+
+

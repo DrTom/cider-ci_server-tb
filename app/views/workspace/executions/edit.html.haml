@@ -1,0 +1,28 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+=form_for @execution, url: workspace_execution_path(@execution),method: 'PUT', html: {class: "form-horizontal"} do |form|
+
+  - tags= @execution.tags
+
+  =form_group "Tags", control_id: "execution_tags" do
+    =text_field :execution, :tags, 
+      placeholder: "new tag 1, new tag 2, ...", 
+      autofocus: 'autofocus',
+      value: tags.pluck(:tag).sort.join(", "), 
+      data:{autocomplete_path: workspace_tags_path}, 
+      class: "form-control"
+
+  =form_group "Priority" do |opts|
+    = form.text_field :priority, type: :number, class: "form-control", id: opts[:control_id]
+
+  = form_group "" do
+    .pull-right
+      = button_tag type: 'submit', class: "btn btn-primary" do
+        Save
+
+
+
+    
+

@@ -1,0 +1,42 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+
+.row
+
+  .span12
+
+    %h1 
+      %i.icon-question-sign
+      Trials
+
+  .span3
+
+    %h3 
+      %i.icon-filter
+      Filters
+
+    = form_tag workspace_trials_path, method: 'GET' do
+
+      %fieldset 
+        %label State: 
+        - %w(all executing finished pending ).each do |state|
+          %label 
+            = radio_button_tag :state, state, (state == @selected_state)
+            = state
+
+
+      %fieldset
+        = button_tag type: 'submit', class: 'btn btn-sm btn-primary' do
+          Filter
+
+  .span9
+    %table.table.table-striped
+      %thead
+      %tbody
+        =render partial: 'trial_row', collection: @trials, as: :trial
+
+  = paginate @trials, theme: 'default'
+
+

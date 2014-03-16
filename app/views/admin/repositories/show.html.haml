@@ -1,0 +1,81 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- repository = @repository
+
+%h1= repository.name
+
+.actions
+  %ul.actions.list-inline
+    %li.delete
+      = link_to admin_repository_path(repository), method: 'DELETE', class: "button btn btn-sm btn-danger" do
+        %i.icon-delete
+        Delete
+
+
+%h2 Branches
+%table.table.table-striped
+  %thead
+  %tbody
+    - @repository.branches.reorder(updated_at: :desc).each do |branch|
+      %tr.branch-row
+        %td= branch.name
+        %td 
+          updated
+          =render 'humanized_time_from_now', at:  branch.updated_at
+        %td
+          = branch.commits.count
+          commits
+
+.repository-properties{id: @repository.id}
+  %h2 Properties
+  %ul.actions.list-inline
+    %li.edit
+      = link_to edit_admin_repository_path(repository), class: "button btn btn-sm btn-warning" do
+        %i.icon-edit
+        Edit
+
+  %table.table.table-striped
+    %thead
+    %tbody
+      - attributes = @repository.attributes.deep_symbolize_keys
+      - attributes.keys.sort.reject{|k| k == :transient_id}.each do |k|
+        %tr
+          %td= k 
+          %td{style: "font-family: monospace;"}= attributes[k]
+
+
+.repository-transient-properties{id: @repository.transient_properties_id}
+  %a{name: @repository.transient_properties_id}
+
+  %h3 Transient properties
+
+  %ul.actions.list-inline
+    %li.update_git
+      = link_to admin_repository_update_git_path(repository), method: 'POST', class: "button btn btn-sm btn-default btn-warning" do
+        %i.icon-refresh
+        Update git
+    %li.re_initialize_git
+      = link_to admin_repository_re_initialize_git_path(repository), method: 'POST', class: "button btn btn-sm btn-warning" do
+        %i.icon-download-alt
+        (Re)initialize git
+
+  - if @transient_properties
+
+    %table.table.table-striped
+      %thead
+      %tbody
+        - @transient_properties.keys.sort.reject{|k| k == :event}.each do |k|
+          %tr
+            %td= k.capitalize
+            - case k
+            - when :events
+              %td 
+                %ul.list-unstyled
+                  - @transient_properties[:events].each do |event|
+                    %li.event{style: "font-family: monospace;"}= event
+            - else
+              %td{style: "font-family: monospace;"}= @transient_properties[k]
+
+

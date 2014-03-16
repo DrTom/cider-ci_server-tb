@@ -1,0 +1,87 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- commit ||= @commit
+- cs = @commit_cache_signatures ? @commit_cache_signatures.select{|cs| cs.commit_id == commit.id}.first :  commit.commit_cache_signature
+
+- cache [commit, cs.branches_signature, cs.executions_signature, cs.repositories_signature] do |cache_tag|
+  - branches = commit.branches.uniq.sort #.reorder("branches.name ASC")
+  - repositories = commit.repositories.uniq.sort
+
+  %tr.commit{data:{reload:{enabled: true, delay: 60, path: workspace_commit_path(commit),partial: "commit_tr", cache_tag: cache_tag}}}
+
+    %td.id.links
+      -# =link_to workspace_commit_path(commit) do
+      %span.commit-id= commit.id[0..5]
+      = render 'remote_links', commit: commit, repositories: commit.repositories.uniq.sort
+
+    %td.subject
+      %span.subject<>=commit.subject.truncate(80)
+
+    %td.commiter-name= commit.committer_name
+
+    %td.committer-date=render 'humanized_time_from_now', at: commit.committer_date
+
+    %td.repositories
+      %ul.list-unstyled
+        - repositories.each do |repository| 
+          %li<>
+            %span.nowrap
+              -# %i.icon-repository
+              %strong.nowrap= repository.name
+
+    %td.branches
+      %ul.list-unstyled
+        = render partial: "branch_li", collection: branches, as: :branch, locals: {commit: commit}
+
+    %td.executions
+      %ul.list-unstyled
+        - commit.executions.each do |execution|
+          %li 
+            %span.nowrap
+              %span<>
+                =link_to workspace_execution_path(execution), class: "label #{label_class_for_state(execution.state)}" do
+                  %i{class: icon_class_for_state(execution.state)}<>
+              = link_to workspace_execution_path(execution)  do
+                %span{style: "margin-left: 0.5em"}=execution.definition_name.truncate(12)
+
+    %td.actions
+      %ul.actions.list-inline
+        - if commit.branches.count > 0
+          %li
+            =link_to new_workspace_execution_path(commit_id: commit.id), class: "btn btn-xs btn-primary"  do
+              %i.icon-execution
+              %span Execute
+
+-#    %td.repositories-and-branches
+-#      %ul.list-unstyled
+-#        - repositories.each do |repository| 
+-#          %li<>
+-#            %span.nowrap
+-#              %i.icon-repository
+-#              %strong.nowrap= repository.name
+-#              %span>:
+-#            %ul.list-inline{style: "display: inline"}
+-#              = render partial: "branch_li", collection: branches.where("repository_id = ?",repository.id), as: :branch, locals: {commit: commit}
+-#
+-#             
+-#
+-#    %td.executions
+-#      %ul.list-unstyled
+-#        - commit.executions.each do |execution|
+-#          %li 
+-#            %span.nowrap
+-#              %span<>
+-#                =link_to workspace_execution_path(execution), class: "label #{label_class_for_state(execution.state)}" do
+-#                  %i{class: icon_class_for_state(execution.state)}<>
+-#              = link_to workspace_execution_path(execution)  do
+-#                %span{style: "margin-left: 0.5em"}=execution.definition_name.truncate(12)
+-#              
+-#    %td.actions
+-#      %ul.actions.list-inline
+-#        - if commit.branches.count > 0
+-#          %li
+-#            =link_to new_workspace_execution_path(commit_id: commit.id), class: "btn btn-xs btn-primary"  do
+-#              %i.icon-execution
+-#              %span Execute

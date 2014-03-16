@@ -1,0 +1,26 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- execution ||= @execution
+- cs = execution.execution_cache_signature
+- cache [execution,cs.stats_signature,cs.trials_signature] do |cache_tag|
+  - speedup = (execution.accumulated_time/execution.duration).round(2) rescue nil
+  - duration = execution.duration.round rescue nil
+  - time = execution.accumulated_time.round rescue nil
+  - reload_delay = %(pending executing).include?(execution.state) ? 10 : 60
+  %table.table.summary{data:{reload:{enabled: true, delay: reload_delay,path: workspace_execution_path(execution),partial: "summary",cache_tag: cache_tag}}}
+    %thead
+    %tbody
+      %tr
+        %td.stats{data: {state: execution.state}}= render "execution_stat", execution: execution
+        - if speedup
+          %td Speedup: #{speedup}
+        - if duration
+          %td 
+            Duration: 
+            %span.humanize-duration{data: {duration: duration}} #{duration} seconds
+        - if time
+          %td 
+            Processing time: 
+            %span.humanize-duration{data: {duration: time}} #{time} seconds

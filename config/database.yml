@@ -9,18 +9,22 @@ default: &default
  
 development:
   <<: *default
-  database: domina_ci_dev
+  database: cider_ci_dev
 
 test: &test
   <<: *default
-  database: domina_ci_test
+  database: cider_ci_test
 
 staging:
   <<: *default
-  database: domina_ci_staging
-  pool: 5
+  database: cider_ci_staging
+  username: torquebox
+  pool: 25
 
 production:
   <<: *default
-  database: domina_ci_prod
-  pool: 10
+  database: cider_ci_production
+  username: polyglot-as
+  password: polyglot-as
+  host:
+  pool: 150

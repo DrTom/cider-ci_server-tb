@@ -1,0 +1,26 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- repositories ||= @repositories
+
+%ul.actions.list-inline.pull-right
+  %li
+    = link_to new_admin_repository_path, class: 'btn btn-primary' do
+      %i.icon-add
+      Add a new repository
+
+
+%h1 
+  %i.icon-repository
+  Repositories
+
+
+%table.table.table-sptriped
+  %thead
+  %tbody
+    = render repositories
+
+= paginate repositories, theme: 'default'
+
+

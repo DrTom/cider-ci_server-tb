@@ -1,0 +1,61 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- execution ||= @execution
+- cs = @execution_cache_signatures ? @execution_cache_signatures.select{|cs| cs.execution_id == execution.id}.first :  execution.execution_cache_signature
+
+- cache [execution,cs.stats_signature,cs.commits_signature,cs.branches_signature,cs.tags_signature] do |cache_tag|
+  - reload_delay= (%w(pending executing).include? execution.state) ? 30 : 180
+  -# commits = @commits.select{|c| c.tree_id == execution.tree_id}.uniq
+  - commits = execution.commits
+
+  %tr.execution{data:{reload:{enabled: true, delay: reload_delay, path: workspace_execution_path(execution),partial: "execution_tr", cache_tag: cache_tag}}}
+
+    %td.execution
+      =link_to workspace_execution_path(execution) do
+        =render_execution_label(execution) do
+          =execution.definition_name
+
+    %td.execution-stat= render "execution_stat", execution: execution
+
+    %td.created-at= render 'humanized_time_from_now', at: execution.created_at
+
+    %td.commits
+      %ul.list-unstyled
+        - commits.each do |commit|
+          %li
+            #{commit.committer_email.gsub(/@.*/,'').truncate(15)}:
+            %em= commit.subject.truncate(30)
+
+    %td.tags= render 'tags', execution: execution, cache_tag: cache_tag
+
+    %td.repositories
+      %ul.list-unstyled
+        - execution.repositories.each do |repository| 
+          %li<>
+            %span.nowrap
+              -# %i.icon-repository
+              %strong.nowrap= repository.name
+
+    %td.branches
+      %ul.list-unstyled
+        - execution.branches.each do |branch|
+          %li= branch.name
+
+    
+    -# %td.repositories-and-branches
+      %ul.list-unstyled
+        - commits.each do |commit|
+          %li
+            %ul.list-unstyled
+              - commit.repositories.each do |repository| 
+                %li<>
+                  %span.nowrap
+                    %i.icon-repository
+                    %strong.nowrap= repository.name
+                    %span>:
+                  %ul.list-inline{style: "display: inline"}
+                    = render partial: "branch_li", collection: commit.branches.where("repository_id = ?",repository.id), as: :branch, locals: {commit: commit}
+
+

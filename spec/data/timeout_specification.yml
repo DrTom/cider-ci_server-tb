@@ -1,0 +1,29 @@
+---
+name: show env
+
+traits:
+- linux
+
+environment_variables: 
+  domonia_meta_test: ABC
+
+ports:
+  xvnc_port: 
+    inet_address: "localhost"
+    min: 5900
+    max: 5999
+
+contexts:
+- name: default
+  environment_variables: 
+    domonia_meta_test: XyZ
+  scripts:
+    main: 
+  tasks:
+  - name: sleep
+    scripts:
+      main:
+        timeout: 1
+        remark: This test fails with probability 2/3
+        body: SLEEP=$((RANDOM%3)) && echo "sleeping ${SLEEP}" && sleep ${SLEEP} && echo 'Hello World!'
+

@@ -1,0 +1,48 @@
+default: 
+  variables: &default_variables
+    app_name: 'cider-ci'
+    load_torquebox_env_cmd: 'load_torquebox_env'
+    root_user: 'root'
+    torquebox_user: 'torquebox'
+    host: BigMac3
+
+production:
+  variables:
+    <<: *default_variables
+    app_dir: /home/polyglot-as/cider-ci_server-tb
+    branch: master
+    torquebox_user: polyglot-as
+    database_database: cider_ci_production
+    database_username: polyglot-as
+    descriptor: config/torquebox_cider-ci_production.yml
+    rails_env: production
+    host: ci2.zhdk.ch
+    sub_path: "/cider-ci"
+    load_torquebox_env_cmd:
+      export TORQUEBOX_HOME=/opt/polyglot-application-server/server;
+      export JBOSS_HOME=$TORQUEBOX_HOME/jboss;
+      export JRUBY_HOME=$TORQUEBOX_HOME/jruby;
+      export PATH=$JRUBY_HOME/bin:$PATH
+  commands: 
+    redeploy: [git_update, precompile_assets, restart_all]
+    deploy: [undeploy_descriptor, git_update, bundle, migrate, precompile_assets, deploy_descriptor]
+
+development:
+  variables:
+    <<: *default_variables
+    app_dir: /Users/thomas/Programming/CIDER-CI/cider-ci_server-tb
+    branch: master
+    database_database: cider_ci_dev
+    database_username: postgres
+    descriptor: config/torquebox_cider-ci_dev.yml
+    rails_env: development
+    host: localhost
+    load_torquebox_env_cmd: rbenv shell jruby-1.7.8;
+      export TORQUEBOX_HOME=/Users/thomas/.immutant/current;
+      export JBOSS_HOME=$TORQUEBOX_HOME/jboss;
+      export JRUBY_HOME=/Users/thomas/.rbenv/versions/jruby-1.7.8
+    sub_path: "/cider-ci-dev"
+    torquebox_user: 'thomas'
+  commands: 
+    deploy: [undeploy_descriptor, deploy_descriptor]
+    undeploy: [undeploy_descriptor, terminate_db_connections]

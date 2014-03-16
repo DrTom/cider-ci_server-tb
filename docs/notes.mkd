@@ -1,0 +1,36 @@
+
+    
+    chmod g+rws /home/git/repositories/
+    setfacl -d -m g::rwx  /home/git/repositories/
+
+### Get and restore staging db
+
+1. `bundle exec twister staging get_db_dump`
+2. `pg_restore --disable-triggers -d cider_ci_dev -a tmp/dump_staging_2013-10-04T15\:04\:48+02\:00.pgbin`
+
+### webcontext / subpath 
+
+    export RAILS_RELATIVE_URL_ROOT='/cider-ci-dev'
+
+### Git notes 
+
+* get parents: `git rev-list -n 5 --parents cc569ff`
+
+* get a file from a bare: `git show c902191:Gemfile`
+
+* show info about a particular commit
+
+    git log -n 1 --pretty="%H% n%T %n%an %n%ae %n%ai %n%cn %n%ce %n%ci %n%s" 69d4f46
+
+
+
+### Attachments
+
+    curl -i -X PUT  -H "Content-Type: application/octet-stream"  localhost:3013/cider_ci_dev//executors_api_v1/trials/40627d9b-454c-4cd4-9386-0f3fac8e69c9/attachments/binary.bin --data-binary @spec/data/octets.bin 
+
+    curl -i -X PUT  -H "Content-Type: text/plain"  localhost:3013/cider_ci_dev//executors_api_v1/trials/40627d9b-454c-4cd4-9386-0f3fac8e69c9/attachments/test.log --data @log/test.log 
+
+
+
+    curl -i   localhost:3013/cider_ci_dev/client/trials/40627d9b-454c-4cd4-9386-0f3fac8e69c9/attachments/binary.bin 
+

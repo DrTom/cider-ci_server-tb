@@ -1,0 +1,21 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+= render_executor_row executor do
+  %td 
+    %ul.list-inline
+      %li 
+        =link_to admin_executor_path(executor), method: 'DELETE', class: "btn btn-danger btn-sm" do
+          %i.icon-delete
+          Destroy
+      %li 
+        = link_to ping_admin_executor_path(executor), method: 'POST', class: "btn btn-default btn-sm" do
+          %i.icon-bell-alt
+          Ping
+      %li 
+        =link_to edit_admin_executor_path(executor) , class: "btn btn-warning btn-sm" do
+          %i.icon-edit
+          Edit
+
+

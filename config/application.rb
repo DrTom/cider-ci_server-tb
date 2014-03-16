@@ -6,7 +6,20 @@ require 'rails/all'
 # you've limited to :test, :development, or :production.
 Bundler.require(:default, Rails.env)
 
-module DominaCI
+# fixes an issue with Oracles java, jruby and encrypted cookies 
+if RUBY_PLATFORM == "java"
+  # jce_class.getDeclaredField("isRestricted") will throw an exception 
+  # on the free java implementation; but we don't to patch it there anyways
+  begin  
+    jce_class =  java::lang::Class.forName("javax.crypto.JceSecurity")
+    field = jce_class.getDeclaredField("isRestricted")
+    field.setAccessible(true)
+    field.set(nil,false)
+  rescue Exception => e
+  end
+end
+
+module CiderCI
   class Application < Rails::Application
     # Settings in config/environments/* take precedence over those specified here.
     # Application configuration should go into files in config/initializers
@@ -19,5 +32,30 @@ module DominaCI
     # The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     # config.i18n.default_locale = :de
+    
+    config.autoload_paths += \
+      %w(lib services).map{|dir| Rails.root.join("app",dir)} 
+
+    config.active_record.schema_format = :sql
+
+    config.generators.helper = false
+    config.generators.javascripts = false
+    config.generators.stylesheets = false
+
+    config.generators.view_specs= false
+    config.generators.helper_specs = false
+
+    config.active_record.timestamped_migrations = false
+
+    config.log_tags = [:port, :remote_ip, lambda{|req| Time.now.strftime("%T")} ]
+
+    config.action_controller.relative_url_root = ENV['RAILS_RELATIVE_URL_ROOT'] or ''
+
+    if defined?(Torquebox)  
+      config.cache_store = :torquebox_store, {expires_in: (60*60*24*7)}
+    else
+      config.cache_store = :memory_store
+    end
+
   end
 end

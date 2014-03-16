@@ -1,0 +1,45 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+%h1 
+  Edit server settings
+
+= form_for @server_settings,  
+  url: admin_server_settings_path(id: @server_settings.id), 
+  html: {class: "form-horizontal"} do |form| 
+
+  = form_group "Host name", 
+    control_id: 'server_settings_server_host' do
+    = form.text_field :server_host, 
+      class: 'from-control'
+
+  = form_group "Port", 
+    control_id: 'server_settings_server_port' do
+    = form.number_field :server_port, 
+      class: 'from-control'
+
+  = form_group "Ssl", control_id: 'server_settings_server_ssl' do
+    .checkbox
+      = form.check_box :server_ssl
+
+  = form_group "UI context", 
+    control_id: 'server_settings_ui_context' do
+    = form.text_field :ui_context, 
+      class: 'from-control'
+
+  = form_group "API context", 
+    control_id: 'server_settings_api_context' do
+    = form.text_field :api_context, 
+      class: 'from-control'
+
+  = form_group "Repositories path", 
+    control_id: 'server_settings_repositories_path' do
+    = form.text_field :repositories_path, 
+      class: 'from-control'
+
+  =form_group "" do
+    = button_tag type: 'submit', 
+      class: "btn btn-primary pull-right" do
+      Save
+

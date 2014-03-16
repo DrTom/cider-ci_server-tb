@@ -1,0 +1,26 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+%ul.list-inline.pull-right
+  %li
+    =link_to new_admin_branch_update_trigger_path, class: "btn btn-primary" do
+      %i.icon-add
+      New branch-update-trigger
+
+%h1 
+  %i.icon-trigger
+  Branch-Update-Triggers
+
+
+%table.table.table-striped.branch-update-triggers
+  %thead
+    %tr
+      %th Repository
+      %th Branch 
+      %th Definition
+      %th Active?
+      %th Actions
+  %tbody
+    = render partial: 'branch_update_trigger_row', collection: @branch_update_triggers, as: :branch_update_trigger
+

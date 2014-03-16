@@ -1,4 +1,4 @@
-DominaCI::Application.configure do
+CiderCI::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
 
   # Code is not reloaded between requests.
@@ -43,7 +43,7 @@ DominaCI::Application.configure do
   # config.force_ssl = true
 
   # Set to :debug to see everything in the log.
-  config.log_level = :info
+  config.log_level = :warn
 
   # Prepend all log lines with the following tags.
   # config.log_tags = [ :subdomain, :uuid ]
@@ -53,6 +53,9 @@ DominaCI::Application.configure do
 
   # Use a different cache store in production.
   # config.cache_store = :mem_cache_store
+  if defined? TorqueBox
+    config.cache_store = :torquebox_store
+  end
 
   # Enable serving of images, stylesheets, and JavaScripts from an asset server.
   # config.action_controller.asset_host = "http://assets.example.com"

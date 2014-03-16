@@ -1,0 +1,38 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- trial ||= @trial
+- cache trial do 
+  - task = trial.task
+  - execution = task.execution
+  - state ||= trial.state
+  %tr
+    %td
+      .label{class: label_class_for_state(state)}
+        %i{class: icon_class_for_state(state)} 
+
+    %td
+      .label
+        %i{class: icon_class_for_priority(trial.priority)}
+        =trial.priority
+    %td
+      %small 
+        =render 'humanized_time_from_now', at: trial.created_at
+
+    %td
+      %small
+        =link_to workspace_task_path(task) do
+          #{task}
+
+    %td 
+      %small
+        =execution.definition_name
+        on
+        =link_to_commit execution.commit
+
+    %td
+      = link_to workspace_trial_path(trial) do
+        %i.icon-eye-open 
+        details ...
+

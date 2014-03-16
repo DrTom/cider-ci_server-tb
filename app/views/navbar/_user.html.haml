@@ -1,0 +1,46 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- if admin_party?
+  %ul.nav.navbar-nav.navbar-right
+    %li 
+      .navbar-text{style: "padding-right: 1em;"}
+        %strong
+          .text-warning
+            %i.icon-warning
+            Admin party on this system!
+
+- else
+
+  - unless current_user
+    =form_tag public_sign_in_path, method: 'POST', class: "navbar-form navbar-right", role: "form" do
+      .form-group
+        =text_field :sign_in, :login, placeholder: "Login or email", autofocus: 'autofocus', class: "form-control"
+      .form-group
+        =password_field :sign_in, :password, placeholder: "Password", class: "form-control"
+      =button_tag type: 'submit' , class: "btn btn-primary" do
+        %i.icon-sign-in
+        Sign me in
+  - else
+    %ul.nav.navbar-nav.navbar-right
+      %li 
+        %a.dropdown-toggle{data: {toggle: :dropdown}, href: "#" } 
+          - if admin?
+            %i.icon-admin
+          - else
+            %i.icon-user
+          = current_user
+          %b.caret
+        %ul.dropdown-menu
+          %li
+            =link_to public_sign_out_path, method: 'POST' do
+              %i.icon-sign-out
+              Sign out!
+          %li
+            =link_to edit_workspace_account_path do
+              %i.icon-edit
+              Account
+
+
+

@@ -1,0 +1,31 @@
+---
+name: show env
+traits:
+- linux
+attachments:
+  logs:
+    glob: log/*.log
+    content-type: text/plain
+env_vars:
+  cider-ci_meta_test: ABC
+contexts:
+- name: default
+  env_vars:
+    cider-ci_meta_test: XYZ
+  scripts:
+    main: 
+  tasks:
+  - name: ls
+    scripts:
+      main:
+        body: ls -lah
+  - name: env
+    scripts:
+      main:
+        body: env | sort
+  - name: nonsense
+    scripts:
+      drop_test_db:
+        order: 8
+        type: post_process
+        body_substitute_with_path: cider-ci_rails/scripts/drop_test_db.rb

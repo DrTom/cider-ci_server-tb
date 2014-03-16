@@ -1,5 +1,6 @@
-DominaCI::Application.configure do
+CiderCI::Application.configure do
   # Settings specified here will take precedence over those in config/application.rb.
+
 
   # In the development environment your application's code is reloaded on
   # every request. This slows down response time but is perfect for development
@@ -26,4 +27,8 @@ DominaCI::Application.configure do
   # This option may cause significant delays in view rendering with a large
   # number of complex assets.
   config.assets.debug = true
+
+  config.log_level = :info
+
+  # config.action_controller.relative_url_root = '/cider_ci_dev'
 end

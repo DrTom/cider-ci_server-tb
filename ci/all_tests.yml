@@ -1,0 +1,60 @@
+---
+name: Cider-CI Server-TB all Tests
+traits:
+- postgresql
+- rbenv
+- ruby-2.1
+- nodejs
+
+attachments: 
+  logs: 
+    glob: 'log/*.log'
+    content-type: text/plain
+  screenshots: 
+    glob: 'tmp/capybara/*.png'
+    content-type: image/png
+
+environment_variables: 
+  RUBY_VERSION: ruby-2.1
+  RAILS_ENV: test
+
+contexts:
+
+- name: meta
+  scripts:
+    completeness:
+      body: "substitute_with_path: ci/scripts/context_meta_completeness.sh"
+  tasks:
+  - name: completeness of rspec tasks
+    scripts:
+      completeness: 
+        body: "substitute_with_path: ci/scripts/context_meta_rspec_complete.sh"
+  - name: completeness of cucumber feature tasks
+    scripts:
+      completeness: 
+        body: "substitute_with_path: ci/scripts/context_meta_cucumber_complete.sh"
+  - name: env
+    scripts:
+      main:
+        body: env | sort; ls
+
+- name: rspec specs
+  scripts:
+    bundle: 
+      timeout: 300  
+      order: 2
+      type: prepare_executor
+      body: "substitute_with_path: ci/scripts/bundle.sh"
+    setup_project:
+      timeout: 10
+      order: 4
+      body: "substitute_with_path: ci/scripts/setup_project.sh"
+    rspec: 
+      order: 5
+      body: "substitute_with_path: ci/scripts/context_specs_rspec.sh"
+    drop_test_db: 
+      timeout: 10
+      order: 8
+      type: post_process
+      body: "substitute_with_path: ci/scripts/drop_test_db.sh"
+  tasks: "substitute_with_path: ci/execution/rspec_tasks.yml"

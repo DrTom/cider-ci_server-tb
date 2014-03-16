@@ -1,0 +1,31 @@
+---
+# This is the TorqueBox configuration file. Refer to the TorqueBox
+# documentation at http://torquebox.org/documentation/current/ 
+# for all configuration options.
+web:
+  context: "/"
+
+messaging:
+  default_message_encoding: edn
+
+topics:
+  /topics/branch_updates:
+  /topics/trial_state_change:
+
+queues:
+  /queues/re_initialize_repository:
+
+messaging: 
+  /topics/branch_updates: BranchUpdateProcessor
+  /topics/trial_state_change: TrialStateChangeProcessor
+
+# services: 
+  
+jobs:
+  trial_state_sweeper:
+    job: TrialStateSweeper
+    cron: '0 */1 * * * ?'
+  attachments_sweeper:
+    job: AttachmentsSweeper
+    cron: '0 0 */1 * * ?'
+

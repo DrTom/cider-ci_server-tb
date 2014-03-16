@@ -1,0 +1,58 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- execution ||= @execution 
+- cs = execution.execution_cache_signature
+- cache [execution,cs.stats_signature,cs.repositories_signature,cs.commits_signature,cs.branches_signature,cs.tasks_signature,cs.trials_signature,@tasks_select_condition,@page] do |cache_tag|
+  - tasks ||= @tasks
+
+  #execution.execution
+
+
+    %ul.list-inline.actions.pull-right
+      - if admin?
+        %li
+          =link_to workspace_execution_path(execution), method: "DELETE", class: "btn btn-danger" do
+            %i.icon-trash
+            Delete
+        %li
+          =link_to edit_workspace_execution_path(execution), class: "btn btn-warning" do
+            %i.icon-edit
+            Edit
+        %li
+          =link_to retry_failed_workspace_execution_path(execution), method: 'POST', class: "btn btn-primary" do
+            %i.icon-retry
+            Retry failed
+
+
+
+
+    %h1 Execution #{execution.definition_name}
+
+    = render 'tags', execution: execution, cache_tag: cache_tag
+
+    = render 'summary', execution: execution, cache_tag: cache_tag
+
+    .commits
+      %h2 #{ execution.commits.count > 1 ? "Commits" : "Commit"}
+      %table.commits.table.table-striped
+        %thead
+        %tbody
+          != render partial: "commit_tr", collection: execution.commits, as: :commit
+
+    = render 'tasks', execution: execution, tasks: tasks
+
+    .definition
+      %h2 Execution Definition
+      .original
+        .well 
+          %h3 Original
+          %pre.script!= execution.specification.data.to_yaml
+
+        .well
+          %h3 Substituted
+          %pre.script!= execution.substituted_specification_data.to_yaml
+          
+
+

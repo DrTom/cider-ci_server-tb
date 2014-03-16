@@ -1,0 +1,10 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+-# we probably don't need this view anymore
+- cache trial do
+  - state = trial.state
+  %li.trial
+    = link_to workspace_trial_path(trial), class: "label #{label_class_for_state(state)}" do
+      %i{class: icon_class_for_state(state)} 

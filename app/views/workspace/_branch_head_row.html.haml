@@ -1,0 +1,17 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- commit = branch.current_commit
+- # we should not need the commit; it seems that 
+- # the updated_at on brach is not reliably updated
+- cache [branch,commit,commit.executions.pluck(:updated_at)] do
+  %tr.branch_head
+    %td.name.bolder
+      =link_to branch.repository, workspace_repository_path(branch.repository)
+    %td.name.bolder
+      =link_to branch.name, workspace_repository_branch_path(branch.repository,branch)
+    %td.updated_at
+      = render "humanized_time_from_now", at: branch.updated_at
+    = render 'commit_tds', commit: commit
+

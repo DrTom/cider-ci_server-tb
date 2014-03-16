@@ -1,0 +1,13 @@
+---
+# This is the TorqueBox configuration file. Refer to the TorqueBox
+# documentation at http://torquebox.org/documentation/current/ 
+# for all configuration options.
+web:
+  context: "/cider-ci-test"
+
+application: 
+  root: "/Users/thomas/Programming/CIDER-CI/cider-ci_server-tb"
+
+environment:  
+  RACK_ENV: test
+  RAILS_RELATIVE_URL_ROOT: "/cider-ci-test"

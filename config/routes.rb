@@ -1,4 +1,130 @@
-DominaCI::Application.routes.draw do
+CiderCI::Application.routes.draw do
+
+  namespace :executors_api_v1 do
+
+    resources :trials do
+      member do
+        put 'attachments/*path', action: 'put_attachment', format: false, as: :attachment
+      end
+    end
+
+    resources :repositories , only: [] do
+      member do
+        get 'git', as: 'git_root'
+        get 'git/*path', action: 'get_git_file', format: false
+      end
+    end
+
+    resources :scripts, only: [:update]
+  end
+
+
+  get '/workspace/dashboard', controller: "workspace" , action: "dashboard"
+
+
+  namespace 'workspace' do
+
+    resource :account, only: [:edit,:update] do
+      post :email_addresses, to: "accounts#add_email_address"
+      delete '/email_address/:email_address', email_address: /[^\/]+/, to: "accounts#delete_email_address", as: 'delete_email_address'
+      post '/email_address/:email_address/as_primary', email_address: /[^\/]+/, to: "accounts#as_primary_email_address", as: 'primary_email_address'
+    end
+
+    resource :session, only: [:edit,:update]
+
+    resources :tags, only: [:index]
+
+
+    get 'branch_heads' #, controller: "workspace" 
+
+    resources :branches do
+      collection do
+        get 'names'
+      end
+    end
+
+    # resources :branch_heads, only: [:index]
+
+    resources :trials do
+      member do
+        get 'attachments/*path', action: 'get_attachment', format: false, as: :attachment
+        post 'set_failed'
+      end
+    end
+
+    resources :branch_update_triggers
+    resources :commits
+    resources :executions do
+      member do
+        post :add_tags
+        get :tasks
+        post :retry_failed
+      end
+    end
+    resources :executors
+
+    resources :repositories do
+      resources :branches
+      member do
+        get 'git', as: 'git_root'
+        get 'git/*path', action: 'get_git_file', format: false
+      end
+      collection do
+        get 'names'
+      end
+    end
+
+    resources :tasks do
+      member do
+        post 'retry'
+      end
+    end
+
+  end
+
+  namespace 'admin' do
+    resource :timeout_settings
+    resource :server_settings
+    resources :branch_update_triggers
+    resources :definitions
+    resources :users do
+      member do
+        #resources :email_addreses
+        get '/email_addresses', action: 'email_addressses' 
+        post '/email_addresses', action: 'add_email_address' 
+        put '/email_address/:email_address', email_address: /[^\/]+/, action: :put_email_address, as: :email_address
+        post '/email_address/:email_address/as_primary', email_address: /[^\/]+/, action: :as_primary_email_address, as: :primary_email_address
+        delete '/email_address/:email_address', email_address: /[^\/]+/, action: :delete_email_address, as: :delete_email_address
+        #delete '/email_address/:email_address', email_address: /[^\/]+/, action: 'delete_email_address', as: :email_address
+      end
+    end
+    resources :executors do
+      member do
+        post 'ping'
+      end
+    end
+    resources :repositories do
+      post 're_initialize_git' 
+      post 'update_git'
+    end
+    get 'env'
+    post 'dispatch_trials'
+  end
+
+  resource :public, only: [:show], controller: "public"
+
+  namespace 'public' do
+    post 'sign_in'
+    post 'sign_out'
+  end
+
+  namespace 'perf' do
+    root controller: "perf", action: "root"
+  end
+
+  get /.*/, controller: "application", action: "redirect"
+
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

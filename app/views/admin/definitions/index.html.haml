@@ -1,0 +1,24 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+%ul.list-inline.actions.pull-right
+  %li
+    = link_to new_admin_definition_path, class: "btn btn-primary" do
+      %i.icon-add
+      Create a definition
+  
+
+%h1 
+  %i.icon-wrench
+  Execution Definitions
+
+
+%table.table.table-striped.definitions
+  %thead
+  %tbody
+    = render partial: 'definition', collection: @definitions, as: :definition
+
+
+= paginate @definitions, theme: 'default'
+

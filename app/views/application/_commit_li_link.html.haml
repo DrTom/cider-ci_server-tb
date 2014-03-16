@@ -1,0 +1,14 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- branches= commit.branches.reorder(name: :asc)
+%li
+  = link_to_commit commit
+  %span
+    #{commit.committer_email.gsub(/@.*/,'').truncate(10)}:
+    %em= commit.subject.truncate(20)
+  - if branches.count > 0
+    %span.text-muted in 
+    %ul.nested-inline.list-inline<
+      = render partial: "branch_li_link", collection: branches, as: :branch, locals: {commit: commit}

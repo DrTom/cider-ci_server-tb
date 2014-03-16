@@ -1,0 +1,15 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+%tr
+  %td
+    =link_to attachment_workspace_trial_path(attachment.trial,attachment.path, disposition: "inline") do
+      = attachment.path
+  %td
+    = link_to attachment_workspace_trial_path(attachment.trial,attachment.path, disposition: "attachment") do
+      %i.icon-download-alt
+  %td
+    - if attachment.content_length
+      = number_to_human_size(attachment.content_length)
+  %td= attachment.content_type

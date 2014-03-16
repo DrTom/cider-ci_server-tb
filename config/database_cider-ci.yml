@@ -1,0 +1,6 @@
+test: 
+  adapter: postgresql
+  encoding: unicode
+  pool: 3
+  host: localhost
+  database: cider_ci_test

@@ -1,0 +1,67 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- executions ||= @executions
+- link_params ||= @link_params
+
+
+- cache @execution_cache_signatures.map{|cs| [cs.stats_signature,cs.commits_signature,cs.branches_signature]} do 
+
+  .executions-page
+
+  %h1 
+    %i.icon-cog
+    Executions
+
+
+  .pull-right
+
+    = form_tag workspace_executions_path, method: 'GET', class: "form-inline well right-top-form" do
+
+      %fieldset
+        .pull-right
+          %ul.list-inline
+            %li
+              .form-group
+                %label.sr-only{for: "repository_names"}
+                = text_field :repository, :names, placeholder: "Repository name 1, ...", 
+                  value: repository_names_filter.join(", "), 
+                  autofocus: true,
+                  data: {autocomplete_path: names_workspace_repositories_path}, 
+                  class: "form-control input-sm"
+            %li
+              .form-group
+                %label.sr-only{for: "branch_names"}
+                = text_field :branch, :names, placeholder: "Branch name 1, ...",
+                  value: branch_names_filter.join(", "), 
+                  data:{autocomplete_path: names_workspace_branches_path}, 
+                  class: "form-control input-sm"
+            %li
+              .form-group
+                %label.sr-only{for: "execution_tags"}
+                = text_field :execution , :tags, placeholder: "tag 1, tag 2, ...",
+                  value: execution_tags_filter.join(", "), 
+                  data:{autocomplete_path: workspace_tags_path}, 
+                  class: "form-control input-sm"
+            %li
+              =link_to workspace_executions_path, class: 'btn btn-sm btn-warning' do
+                %i.icon-remove-sign
+                Reset
+            %li
+              =button_tag type: 'submit', class: 'btn btn-sm btn-primary' do
+                %i.icon-filter
+                Apply
+
+        %p.help-block{style: "margin-left: 14px"}
+          :erb
+            <small>Values within one field are combined with logical <em>or</em>.
+            Multiple fields are combined with logical  <em>and<em>.</small>
+
+
+
+  = render partial: "executions_table", executions: executions, link_params: link_params
+
+  = paginate executions, theme: 'default'
+
+

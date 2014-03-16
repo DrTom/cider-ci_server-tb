@@ -1,0 +1,33 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+%h1 Execution Definition "#{@definition.name}"
+
+.original
+  .well 
+    %h3 Original
+    %pre.script!= @definition.specification.data.to_yaml
+
+
+
+
+= form_tag admin_definition_path(@definition), method: 'GET',  html: {class: "form-horizontal"} do |form|
+
+  = form_group "Commit id", control_id: "definition_commit_id"  do
+    = text_field_tag :commit_id, nil,  value: params[:commit_id], class: "form-control"
+
+  = form_group "" do
+    .pull-right
+      = button_tag type: 'submit', class: "btn btn-primary" do
+        Verify substitution
+
+
+- if @substituted_specification
+  .well
+    %h3 
+      Substituted
+      %pre.script!= @substituted_specification.to_yaml
+
+
+

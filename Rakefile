@@ -3,4 +3,4 @@
 
 require File.expand_path('../config/application', __FILE__)
 
-DominaCI::Application.load_tasks
+CiderCI::Application.load_tasks

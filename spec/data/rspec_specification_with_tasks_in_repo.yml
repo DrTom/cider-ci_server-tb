@@ -1,0 +1,19 @@
+---
+name: DominaCI
+traits:
+- rbenv
+- ruby-2.0.0
+- postgresql
+scripts:
+  bundle:
+    body: export RAILS_ENV=test; rbenv shell ruby-2.0.0; bundle;
+    type: prepare_executor
+  main:
+    body: export RAILS_ENV=test; rbenv shell ruby-2.0.0;
+    order: 5
+contexts:
+- name: rspec
+  scripts:
+    main:
+      body: bundle exec rake db:reset
+  tasks_substitute_with_path: "spec/tasks.yml"

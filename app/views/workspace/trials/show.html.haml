@@ -1,0 +1,64 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- trial ||= @trial 
+- cache trial do
+  %h1 
+    %i.icon-trial
+    Trial for the task "#{trial.task.data['name']}"
+
+  %ul.list-inline
+    %li{class: "label #{label_class_for_state(trial.state)}"}
+      %i{class: icon_class_for_state(trial.state)}
+      =trial.state
+    %li.actions.pull-right
+      - if admin?
+        %ul.list-inline
+          %li 
+            = link_to workspace_trial_path(trial),method: 'DELETE', class: "btn btn-danger btn-sm" do
+              %i.icon-trash
+              Destroy
+          %li 
+            = link_to set_failed_workspace_trial_path(trial),method: 'POST', class: "btn btn-danger btn-sm" do
+              %i.icon-failed
+              Mark as failed
+
+  %p
+    Executed 
+    -if trial.started_at
+      %b #{render 'humanized_time_from_now', at: trial.started_at}
+    - if trial.finished_at and trial.started_at
+      in 
+      %b #{distance_of_time_in_words(trial.started_at,trial.finished_at,include_seconds: true)} 
+      (#{(trial.finished_at - trial.started_at).round(2)} seconds)
+    - if executor_name = trial.executor.try(:name)
+      on 
+      %b #{executor_name}.
+
+  -unless trial.error.blank?
+    %h3 Execution Error
+    %pre
+      %code= trial.error
+
+  - cache trial.attachments.collection_cache_tag do
+    - if trial.attachments.count > 0
+      .attachments 
+        %h2 
+          %i.icon-paperclip
+          Attachments 
+        %table.table.table-striped
+          %thead
+          %tbody
+            =render partial: 'attachment', collection: trial.attachments, as: :attachment
+
+
+  .scripts
+    %h2 
+      %i.icon-file-text-alt
+      Scripts
+    %ul.list-inline 
+      = render partial: 'script_label', collection: trial.scripts, as: :script
+
+    %ul.list-unstyled.scripts
+      = render partial: 'script', collection: trial.scripts

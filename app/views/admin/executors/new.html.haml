@@ -1,0 +1,18 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+- executor ||= @executor
+%h1 
+  %i.icon-executor
+  New executor
+
+= form_for executor, url: admin_executors_path, method: 'POST',  html: {class: "form-horizontal", role: 'form'} do |f|
+
+  = render "form_fields", executor: executor
+
+  = form_group "", cols_control: 8 do
+    = button_tag type: 'submit', class: "btn btn-primary pull-right" do
+      Create
+
+

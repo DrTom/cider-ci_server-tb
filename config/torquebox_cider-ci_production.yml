@@ -1,0 +1,15 @@
+---
+# This is the TorqueBox configuration file. Refer to the TorqueBox
+# documentation at http://torquebox.org/documentation/current/ 
+# for all configuration options.
+web:
+  root: 
+    - "ci2.zhdk.ch"
+  context: "/cider-ci"
+
+application: 
+  root: "/home/polyglot-as/cider-ci_server-tb"
+
+environment:  
+  RACK_ENV: production
+  RAILS_RELATIVE_URL_ROOT: "/cider-ci"

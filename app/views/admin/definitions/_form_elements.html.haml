@@ -1,0 +1,14 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+=form_group "Name", control_id: "definition_name"  do
+  = text_field :definition, :name, value: @definition.name, autofocus: true, class: "form-control"
+
+=form_group "Specification", control_id: "specification_data", cols_control: 8 do
+  = text_area :specification, :data, value: (@previous_data || @definition.specification.data.to_yaml), class: "form-control", style: "height: 20em" 
+
+=form_group "Description", control_id: "specification_data", cols_control: 8 do
+  = text_area :specification, :description, value: (@definition.description), class: "form-control", style: "height: 20em" 
+
+
