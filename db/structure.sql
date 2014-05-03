@@ -456,7 +456,7 @@ CREATE TABLE executors (
     enabled boolean DEFAULT true NOT NULL,
     app character varying(255),
     app_version character varying(255),
-    traits character varying(255)[],
+    traits character varying(255)[] DEFAULT '{}'::character varying[] NOT NULL,
     last_ping_at timestamp without time zone,
     created_at timestamp without time zone,
     updated_at timestamp without time zone
@@ -1039,6 +1039,7 @@ CREATE INDEX users_to_tsvector_idx3 ON users USING gin (to_tsvector('english'::r
 --
 
 CREATE RULE "_RETURN" AS ON SELECT TO executors_with_load DO INSTEAD SELECT executors.id, executors.name, executors.host, executors.port, executors.ssl, executors.server_overwrite, executors.server_ssl, executors.server_host, executors.server_port, executors.max_load, executors.enabled, executors.app, executors.app_version, executors.traits, executors.last_ping_at, executors.created_at, executors.updated_at, count(trials.executor_id) AS current_load, ((count(trials.executor_id))::double precision / (executors.max_load)::double precision) AS relative_load FROM (executors LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY ((ARRAY['dispatching'::character varying, 'executing'::character varying])::text[]))))) GROUP BY executors.id;
+ALTER VIEW executors_with_load SET ();
 
 
 --
@@ -1238,3 +1239,5 @@ INSERT INTO schema_migrations (version) VALUES ('70');
 INSERT INTO schema_migrations (version) VALUES ('71');
 
 INSERT INTO schema_migrations (version) VALUES ('74');
+
+INSERT INTO schema_migrations (version) VALUES ('80');
