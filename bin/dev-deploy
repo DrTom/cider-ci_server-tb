@@ -1,0 +1,7 @@
+#!/bin/bash
+TORQUEBOX_HOME=/Users/thomas/.immutant/current 
+JBOSS_HOME=$TORQUEBOX_HOME/jboss 
+JRUBY_HOME=/Users/thomas/.rbenv/versions/jruby-1.7.11
+DEPLOYMENT_DESC=${JBOSS_HOME}/standalone/deployments/torquebox_cider-ci_dev-knob.yml
+cp config/torquebox_cider-ci_dev.yml ${DEPLOYMENT_DESC} \
+&& touch ${DEPLOYMENT_DESC}.dodeploy 

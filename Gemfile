@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 source 'http://torquebox.org/rubygems'
-source 'http://torquebox.org/builds/1781/gem-repo/'
+#source 'http://torquebox.org/builds/1781/gem-repo/'
 
 gem 'activerecord-jdbcpostgresql-adapter',  platform: :jruby
 gem 'activerecord-jdbc-adapter', '~> 1.3.2', platform: :jruby
@@ -38,10 +38,10 @@ gem 'selenium-webdriver'
 gem 'slim'
 gem 'textacular', git:  'https://github.com/DrTom/textacular.git', ref: '0b1101f'
 gem 'therubyrhino', platform: :jruby
-gem 'torquebox', '3.x.incremental.1781', platform: :jruby
-gem 'torquebox-messaging', '3.x.incremental.1781', platform: 'jruby'
-gem 'torquebox-rake-support', '3.x.incremental.1781', platform: :jruby
-gem 'torquebox-server', '3.x.incremental.1781', platform: 'jruby'
+gem 'torquebox', '3.1.0', platform: :jruby
+gem 'torquebox-messaging', '3.1.0', platform: 'jruby'
+gem 'torquebox-rake-support', '3.1.0', platform: :jruby
+gem 'torquebox-server', '3.1.0', platform: 'jruby'
 gem 'twister', :git => 'https://github.com/DrTom/twister.git', :ref => '6aca875f3c8131b965a1285ec19f41e70891c9d0'
 gem 'uglifier', '>= 1.3.0'
 gem 'uuidtools'
