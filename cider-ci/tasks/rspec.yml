@@ -1,12 +1,12 @@
 ---
-- name: db ranches_commits_functions_spec 
-  scripts:
-    rspec:
-      body: bundle exec rspec "spec/db/branches_commits_functions_spec.rb"
 - name: controllers branch_update_triggers_controller
   scripts:
     rspec:
       body: bundle exec rspec "spec/controllers/branch_update_triggers_controller_spec.rb"
+- name: db branches_commits_functions
+  scripts:
+    rspec:
+      body: bundle exec rspec "spec/db/branches_commits_functions_spec.rb"
 - name: feature attachments
   scripts:
     rspec:
