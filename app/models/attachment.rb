@@ -3,7 +3,6 @@
 #  See the LICENSE.txt file provided with this software.
 
 class Attachment < ActiveRecord::Base
-  self.primary_keys= ['trial_id','path'] 
   belongs_to :trial, touch: true
 
   scope :out_of_retention_time, lambda{

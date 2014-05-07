@@ -206,7 +206,8 @@ CREATE TABLE attachments (
     content_type character varying(255) DEFAULT 'application/octet-stream'::character varying NOT NULL,
     content text,
     created_at timestamp without time zone,
-    updated_at timestamp without time zone
+    updated_at timestamp without time zone,
+    id uuid DEFAULT uuid_generate_v4() NOT NULL
 );
 
 
@@ -567,7 +568,7 @@ CREATE TABLE users (
 --
 
 ALTER TABLE ONLY attachments
-    ADD CONSTRAINT attachments_pkey PRIMARY KEY (trial_id, path);
+    ADD CONSTRAINT attachments_pkey PRIMARY KEY (id);
 
 
 --
@@ -759,6 +760,13 @@ CREATE INDEX email_addresses_to_tsvector_idx ON email_addresses USING gin (to_ts
 --
 
 CREATE INDEX email_addresses_to_tsvector_idx1 ON email_addresses USING gin (to_tsvector('english'::regconfig, (searchable)::text));
+
+
+--
+-- Name: index_attachments_on_trial_id_and_path; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE UNIQUE INDEX index_attachments_on_trial_id_and_path ON attachments USING btree (trial_id, path);
 
 
 --
@@ -1241,3 +1249,5 @@ INSERT INTO schema_migrations (version) VALUES ('71');
 INSERT INTO schema_migrations (version) VALUES ('74');
 
 INSERT INTO schema_migrations (version) VALUES ('80');
+
+INSERT INTO schema_migrations (version) VALUES ('81');

@@ -5,7 +5,6 @@ source 'http://torquebox.org/rubygems'
 gem 'activerecord-jdbcpostgresql-adapter',  platform: :jruby
 gem 'activerecord-jdbc-adapter', '~> 1.3.2', platform: :jruby
 
-gem 'composite_primary_keys', "~> 6.0"
 gem 'pg', platform: 'mri'
 gem 'rails', '4.0.1'
 
