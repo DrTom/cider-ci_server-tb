@@ -53,7 +53,7 @@ class Admin::ExecutorsController < AdminController
 
   def processed_params 
     traits = params[:executor].try(:[],:traits).try(:split,',').try(:map){|s|s.strip}.try(:sort)
-    params[:executor].try(:permit,:name,:host,:port,:ssl,:server_host,:server_port,:max_load,:enabled,:traits).try(:merge,{traits: traits})
+    params[:executor].try(:permit,:name,:host,:port,:ssl,:server_overwrite,:server_host,:server_port,:server_ssl,:max_load,:enabled,:traits).try(:merge,{traits: traits})
   end
 
 end
