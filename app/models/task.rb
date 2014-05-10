@@ -4,6 +4,7 @@
 
 class Task < ActiveRecord::Base
   AUTO_TRIALS= 3
+  EAGER_TRIALS= 1
   self.primary_key= 'id'
   before_create{self.id ||= SecureRandom.uuid}
   belongs_to :execution
@@ -36,9 +37,15 @@ class Task < ActiveRecord::Base
      Integer(data['auto_trials']) rescue AUTO_TRIALS 
   end
 
+  def eager_trials
+     Integer(data['eager_trials']) rescue EAGER_TRIALS 
+  end
+
+
   def check_and_retry!
-    if trials.pluck(:state).all?{|s| s == 'failed'} \
-      and trials.count < auto_trials
+    while trials.where(state: 'success').count == 0 \
+      and trials.count < auto_trials \
+      and trials.count - trials.where(state: 'failed').count < eager_trials
       create_trial
     end
   end
