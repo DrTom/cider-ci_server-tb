@@ -3,7 +3,7 @@
 #  See the LICENSE.txt file provided with this software.
 
 class Task < ActiveRecord::Base
-  MAX_AUTO_RETRIES= 3
+  AUTO_TRIALS= 3
   self.primary_key= 'id'
   before_create{self.id ||= SecureRandom.uuid}
   belongs_to :execution
@@ -32,13 +32,13 @@ class Task < ActiveRecord::Base
     end
   end
 
-  def max_auto_retries
-     Integer(data['max_auto_retries']) rescue MAX_AUTO_RETRIES 
+  def auto_trials
+     Integer(data['auto_trials']) rescue AUTO_TRIALS 
   end
 
   def check_and_retry!
     if trials.pluck(:state).all?{|s| s == 'failed'} \
-      and trials.count < max_auto_retries
+      and trials.count < auto_trials
       create_trial
     end
   end
