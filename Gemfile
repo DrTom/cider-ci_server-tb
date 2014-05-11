@@ -3,7 +3,7 @@ source 'http://torquebox.org/rubygems'
 #source 'http://torquebox.org/builds/1781/gem-repo/'
 
 gem 'activerecord-jdbcpostgresql-adapter',  platform: :jruby
-gem 'activerecord-jdbc-adapter', '>= 1.3.2', platform: :jruby
+gem 'activerecord-jdbc-adapter', platform: :jruby
 
 gem 'pg', platform: 'mri'
 gem 'rails', '4.1.0'
@@ -34,7 +34,7 @@ gem 'rspec-rails', group: [:development, :test]
 gem 'sass-rails', '>= 4.0.0'
 gem 'sdoc', group: [:doc], require: false
 gem 'selenium-webdriver'
-gem 'textacular'
+gem 'textacular', git:  'https://github.com/DrTom/textacular.git', ref: 'ab1f5677539b1014f238dc2c644c2e4ef9c56c12'
 gem 'therubyrhino', platform: :jruby
 gem 'torquebox', '3.1.0', platform: :jruby
 gem 'torquebox-messaging', '3.1.0', platform: 'jruby'
