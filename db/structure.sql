@@ -3,6 +3,7 @@
 --
 
 SET statement_timeout = 0;
+SET lock_timeout = 0;
 SET client_encoding = 'UTF8';
 SET standard_conforming_strings = on;
 SET check_function_bodies = false;
@@ -20,20 +21,6 @@ CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
-
-
---
--- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
---
-
-CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
-
-
---
--- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
---
-
-COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
 
 
 --
@@ -330,7 +317,16 @@ CREATE TABLE repositories (
 --
 
 CREATE VIEW commit_cache_signatures AS
-    SELECT commits.id AS commit_id, md5(string_agg(DISTINCT (branches.updated_at)::text, ', '::text ORDER BY (branches.updated_at)::text)) AS branches_signature, md5(string_agg(DISTINCT (repositories.updated_at)::text, ', '::text ORDER BY (repositories.updated_at)::text)) AS repositories_signature, md5(string_agg(DISTINCT (executions.updated_at)::text, ', '::text ORDER BY (executions.updated_at)::text)) AS executions_signature FROM ((((commits LEFT JOIN branches_commits ON (((branches_commits.commit_id)::text = (commits.id)::text))) LEFT JOIN branches ON ((branches_commits.branch_id = branches.id))) LEFT JOIN executions ON (((executions.tree_id)::text = (commits.tree_id)::text))) LEFT JOIN repositories ON ((branches.repository_id = repositories.id))) GROUP BY commits.id;
+ SELECT commits.id AS commit_id,
+    md5(string_agg(DISTINCT (branches.updated_at)::text, ', '::text ORDER BY (branches.updated_at)::text)) AS branches_signature,
+    md5(string_agg(DISTINCT (repositories.updated_at)::text, ', '::text ORDER BY (repositories.updated_at)::text)) AS repositories_signature,
+    md5(string_agg(DISTINCT (executions.updated_at)::text, ', '::text ORDER BY (executions.updated_at)::text)) AS executions_signature
+   FROM ((((commits
+   LEFT JOIN branches_commits ON (((branches_commits.commit_id)::text = (commits.id)::text)))
+   LEFT JOIN branches ON ((branches_commits.branch_id = branches.id)))
+   LEFT JOIN executions ON (((executions.tree_id)::text = (commits.tree_id)::text)))
+   LEFT JOIN repositories ON ((branches.repository_id = repositories.id)))
+  GROUP BY commits.id;
 
 
 --
@@ -350,7 +346,36 @@ CREATE TABLE definitions (
 --
 
 CREATE VIEW depths AS
-    SELECT cd.id AS commit_id, cd.depth FROM (WITH RECURSIVE ancestors(id, depth) AS ((SELECT commits.id, 0 AS depth FROM commits WHERE ((NOT (EXISTS (SELECT 1 FROM commit_arcs WHERE ((commits.id)::text = (commit_arcs.child_id)::text)))) AND (commits.depth IS NULL)) UNION SELECT parents.id, parents.depth FROM commits parents WHERE ((parents.depth IS NOT NULL) AND (EXISTS (SELECT 1 FROM commits children, commit_arcs WHERE (((children.depth IS NULL) AND ((commit_arcs.child_id)::text = (children.id)::text)) AND ((commit_arcs.parent_id)::text = (parents.id)::text)))))) UNION SELECT commits.id, (ancestors.depth + 1) FROM commits, ancestors, commit_arcs WHERE ((((commits.id)::text = (commit_arcs.child_id)::text) AND ((ancestors.id)::text = (commit_arcs.parent_id)::text)) AND (commits.depth IS NULL))) SELECT ancestors.id, max(ancestors.depth) AS depth FROM ancestors GROUP BY ancestors.id ORDER BY max(ancestors.depth)) cd;
+ SELECT cd.id AS commit_id,
+    cd.depth
+   FROM ( WITH RECURSIVE ancestors(id, depth) AS (
+                        (         SELECT commits.id,
+                                    0 AS depth
+                                   FROM commits
+                                  WHERE ((NOT (EXISTS ( SELECT 1
+                                           FROM commit_arcs
+                                          WHERE ((commits.id)::text = (commit_arcs.child_id)::text)))) AND (commits.depth IS NULL))
+                        UNION
+                                 SELECT parents.id,
+                                    parents.depth
+                                   FROM commits parents
+                                  WHERE ((parents.depth IS NOT NULL) AND (EXISTS ( SELECT 1
+                                           FROM commits children,
+                                            commit_arcs
+                                          WHERE (((children.depth IS NULL) AND ((commit_arcs.child_id)::text = (children.id)::text)) AND ((commit_arcs.parent_id)::text = (parents.id)::text))))))
+                UNION
+                         SELECT commits.id,
+                            (ancestors_1.depth + 1)
+                           FROM commits,
+                            ancestors ancestors_1,
+                            commit_arcs
+                          WHERE ((((commits.id)::text = (commit_arcs.child_id)::text) AND ((ancestors_1.id)::text = (commit_arcs.parent_id)::text)) AND (commits.depth IS NULL))
+                )
+         SELECT ancestors.id,
+            max(ancestors.depth) AS depth
+           FROM ancestors
+          GROUP BY ancestors.id
+          ORDER BY max(ancestors.depth)) cd;
 
 
 --
@@ -388,7 +413,23 @@ CREATE TABLE tasks (
 --
 
 CREATE VIEW execution_stats AS
-    SELECT executions.id AS execution_id, (SELECT count(*) AS count FROM tasks WHERE (tasks.execution_id = executions.id)) AS total, (SELECT count(*) AS count FROM tasks WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'pending'::text))) AS pending, (SELECT count(*) AS count FROM tasks WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'executing'::text))) AS executing, (SELECT count(*) AS count FROM tasks WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'failed'::text))) AS failed, (SELECT count(*) AS count FROM tasks WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'success'::text))) AS success FROM executions;
+ SELECT executions.id AS execution_id,
+    ( SELECT count(*) AS count
+           FROM tasks
+          WHERE (tasks.execution_id = executions.id)) AS total,
+    ( SELECT count(*) AS count
+           FROM tasks
+          WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'pending'::text))) AS pending,
+    ( SELECT count(*) AS count
+           FROM tasks
+          WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'executing'::text))) AS executing,
+    ( SELECT count(*) AS count
+           FROM tasks
+          WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'failed'::text))) AS failed,
+    ( SELECT count(*) AS count
+           FROM tasks
+          WHERE ((tasks.execution_id = executions.id) AND ((tasks.state)::text = 'success'::text))) AS success
+   FROM executions;
 
 
 --
@@ -436,7 +477,25 @@ CREATE TABLE trials (
 --
 
 CREATE VIEW execution_cache_signatures AS
-    SELECT executions.id AS execution_id, ((((((((string_agg(DISTINCT (execution_stats.total)::text, ', '::text) || '-'::text) || string_agg(DISTINCT (execution_stats.pending)::text, ', '::text)) || '-'::text) || string_agg(DISTINCT (execution_stats.executing)::text, ', '::text)) || '-'::text) || string_agg(DISTINCT (execution_stats.failed)::text, ', '::text)) || '-'::text) || string_agg(DISTINCT (execution_stats.success)::text, ', '::text)) AS stats_signature, md5(string_agg(DISTINCT (branches.updated_at)::text, ', '::text ORDER BY (branches.updated_at)::text)) AS branches_signature, md5(string_agg(DISTINCT (commits.updated_at)::text, ', '::text ORDER BY (commits.updated_at)::text)) AS commits_signature, md5(string_agg(DISTINCT (repositories.updated_at)::text, ', '::text ORDER BY (repositories.updated_at)::text)) AS repositories_signature, md5(string_agg(DISTINCT (tags.updated_at)::text, ', '::text ORDER BY (tags.updated_at)::text)) AS tags_signature, md5(string_agg(DISTINCT (tasks.updated_at)::text, ', '::text ORDER BY (tasks.updated_at)::text)) AS tasks_signature, md5(string_agg(DISTINCT (trials.updated_at)::text, ', '::text ORDER BY (trials.updated_at)::text)) AS trials_signature FROM (((((((((executions JOIN execution_stats ON ((execution_stats.execution_id = executions.id))) LEFT JOIN commits ON (((executions.tree_id)::text = (commits.tree_id)::text))) LEFT JOIN branches_commits ON (((branches_commits.commit_id)::text = (commits.id)::text))) LEFT JOIN branches ON ((branches_commits.branch_id = branches.id))) LEFT JOIN repositories ON ((branches.repository_id = repositories.id))) LEFT JOIN tasks ON ((tasks.execution_id = executions.id))) LEFT JOIN trials ON ((trials.task_id = tasks.id))) LEFT JOIN executions_tags ON ((executions_tags.execution_id = executions.id))) LEFT JOIN tags ON ((executions_tags.tag_id = tags.id))) GROUP BY executions.id;
+ SELECT executions.id AS execution_id,
+    ((((((((string_agg(DISTINCT (execution_stats.total)::text, ', '::text) || '-'::text) || string_agg(DISTINCT (execution_stats.pending)::text, ', '::text)) || '-'::text) || string_agg(DISTINCT (execution_stats.executing)::text, ', '::text)) || '-'::text) || string_agg(DISTINCT (execution_stats.failed)::text, ', '::text)) || '-'::text) || string_agg(DISTINCT (execution_stats.success)::text, ', '::text)) AS stats_signature,
+    md5(string_agg(DISTINCT (branches.updated_at)::text, ', '::text ORDER BY (branches.updated_at)::text)) AS branches_signature,
+    md5(string_agg(DISTINCT (commits.updated_at)::text, ', '::text ORDER BY (commits.updated_at)::text)) AS commits_signature,
+    md5(string_agg(DISTINCT (repositories.updated_at)::text, ', '::text ORDER BY (repositories.updated_at)::text)) AS repositories_signature,
+    md5(string_agg(DISTINCT (tags.updated_at)::text, ', '::text ORDER BY (tags.updated_at)::text)) AS tags_signature,
+    md5(string_agg(DISTINCT (tasks.updated_at)::text, ', '::text ORDER BY (tasks.updated_at)::text)) AS tasks_signature,
+    md5(string_agg(DISTINCT (trials.updated_at)::text, ', '::text ORDER BY (trials.updated_at)::text)) AS trials_signature
+   FROM (((((((((executions
+   JOIN execution_stats ON ((execution_stats.execution_id = executions.id)))
+   LEFT JOIN commits ON (((executions.tree_id)::text = (commits.tree_id)::text)))
+   LEFT JOIN branches_commits ON (((branches_commits.commit_id)::text = (commits.id)::text)))
+   LEFT JOIN branches ON ((branches_commits.branch_id = branches.id)))
+   LEFT JOIN repositories ON ((branches.repository_id = repositories.id)))
+   LEFT JOIN tasks ON ((tasks.execution_id = executions.id)))
+   LEFT JOIN trials ON ((trials.task_id = tasks.id)))
+   LEFT JOIN executions_tags ON ((executions_tags.execution_id = executions.id)))
+   LEFT JOIN tags ON ((executions_tags.tag_id = tags.id)))
+  GROUP BY executions.id;
 
 
 --
@@ -1046,8 +1105,29 @@ CREATE INDEX users_to_tsvector_idx3 ON users USING gin (to_tsvector('english'::r
 -- Name: _RETURN; Type: RULE; Schema: public; Owner: -
 --
 
-CREATE RULE "_RETURN" AS ON SELECT TO executors_with_load DO INSTEAD SELECT executors.id, executors.name, executors.host, executors.port, executors.ssl, executors.server_overwrite, executors.server_ssl, executors.server_host, executors.server_port, executors.max_load, executors.enabled, executors.app, executors.app_version, executors.traits, executors.last_ping_at, executors.created_at, executors.updated_at, count(trials.executor_id) AS current_load, ((count(trials.executor_id))::double precision / (executors.max_load)::double precision) AS relative_load FROM (executors LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY ((ARRAY['dispatching'::character varying, 'executing'::character varying])::text[]))))) GROUP BY executors.id;
-ALTER VIEW executors_with_load SET ();
+CREATE RULE "_RETURN" AS
+    ON SELECT TO executors_with_load DO INSTEAD  SELECT executors.id,
+    executors.name,
+    executors.host,
+    executors.port,
+    executors.ssl,
+    executors.server_overwrite,
+    executors.server_ssl,
+    executors.server_host,
+    executors.server_port,
+    executors.max_load,
+    executors.enabled,
+    executors.app,
+    executors.app_version,
+    executors.traits,
+    executors.last_ping_at,
+    executors.created_at,
+    executors.updated_at,
+    count(trials.executor_id) AS current_load,
+    ((count(trials.executor_id))::double precision / (executors.max_load)::double precision) AS relative_load
+   FROM (executors
+   LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY ((ARRAY['dispatching'::character varying, 'executing'::character varying])::text[])))))
+  GROUP BY executors.id;
 
 
 --
@@ -1251,3 +1331,4 @@ INSERT INTO schema_migrations (version) VALUES ('74');
 INSERT INTO schema_migrations (version) VALUES ('80');
 
 INSERT INTO schema_migrations (version) VALUES ('81');
+

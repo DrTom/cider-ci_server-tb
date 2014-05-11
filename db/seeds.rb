@@ -8,11 +8,41 @@
 #
 #
 
-all_spec= Specification.find_or_create_by_data! 'substitute_with_path: ci/all_tests.yml'
+all_spec= Specification.find_or_create_by_data! 'substitute_with_path: cider-ci/all_tests.yml'
 Definition.find_by(name: "All tests").try(&:destroy)
 Definition.create name: "All tests" ,
-  description: "Loads the specification from the repository path 'ci/all_tests.yml'.",
+  description: "Loads the specification from the repository path 'cider-ci/all_tests.yml'.",
   specification: all_spec
 
 
+executor=Executor.find_or_initialize_by(name: "Localhost")
+
+traits= (executor.traits || []).concat([
+          'firefox',
+          'imagemagick',
+          'jdk',
+          'lein',
+          'libimage-exiftool-perl',
+          'linux',
+          'mysql',
+          'nodejs',
+          'pg93',
+          'phantomjs',
+          'rbenv',
+          'ruby',
+          'tightvnc',
+        ]).sort.uniq
+
+executor.update_attributes!(
+  host: "127.0.0.1",
+  port: "8443",
+  traits: traits,
+  ssl: true
+)
+
+
+ServerSettings.find.update_attributes! \
+  repositories_path: '/Users/thomas/Programming/CIDER-CI/server-tb/tmp/repositories',
+  ui_context: 'cider-ci-dev',
+  api_context: 'cider-ci-dev'
 
