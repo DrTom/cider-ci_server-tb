@@ -6,11 +6,25 @@
 - executions ||= @executions
 
 .cider-ci.text-center
-  %h1 Cider-CI at ZHDK 
 
 
   %h2 About Cider-CI
+
+  %p#release-info
+    Version  
+
+    =Rails.configuration.release_info[:version_major]
+    %span<>.
+    =Rails.configuration.release_info[:version_minor]
+    %span<>.
+    =Rails.configuration.release_info[:version_patch]
+
+
   %p
     %strong
-      Cider-CI is an application and  service stack for highly parallelized testing and continuos integration.
+      Cider-CI is an application and service stack for highly parallelized testing and continuos integration.
+
+  %p 
+    Read more about Cider-CI on the 
+    %a{href: "https://github.com/DrTom/cider-ci"} Cider-CI github project page.
 

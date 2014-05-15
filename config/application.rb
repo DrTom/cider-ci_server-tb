@@ -57,5 +57,8 @@ module CiderCI
       config.cache_store = :memory_store
     end
 
+    config.release_info = YAML.load_file(Rails.root.join "config","release.yml")
+      .with_indifferent_access[:release]
+
   end
 end
