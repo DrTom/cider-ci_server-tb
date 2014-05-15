@@ -40,7 +40,7 @@
 
     %td.branches
       %ul.list-unstyled
-        - execution.branches.each do |branch|
+        - execution.branches.select('branches.name,"commits"."committer_date",commits.created_at,commits.id').each do |branch|
           %li= branch.name
 
     

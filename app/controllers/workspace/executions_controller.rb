@@ -63,27 +63,6 @@ class Workspace::ExecutionsController < WorkspaceController
       .where(%[ execution_id IN (#{@executions.map(&:id).map{|id| "'#{id}'"}.join(",").non_blank_or("NULL")}) ])\
       .select(:execution_id,:stats_signature,:commits_signature,:branches_signature,:tags_signature)
 
-
-    @executions= @executions.includes(:branches)
-    @executions= @executions.includes(:commits)
-    @executions= @executions.includes(:execution_cache_signature)
-    @executions= @executions.includes(:execution_stat)
-    @executions= @executions.includes(:repositories)
-
-    # TODO restore this; eager loading tags seems to be buggy if we filter for tags
-    #@executions= @executions.includes(:tags)
-  
-
-    # the simple rails includes eager loading doesn't work for the following; test seem 
-    # to imply that it doesn't pay to eager load anyways; lets see on production 
-    #
-    #@commits = Commit.where(%[ tree_id IN ( #{@executions.select("tree_id").to_sql} )])
-    #@branches = Branch.joins(:commits).select("branches.*,branches_commits.commit_id AS commit_id") \
-    #  .where(%[ branches_commits.commit_id IN ( #{@commits.select("commits.id").to_sql} ) ])
-    #@current_commits = Commit.where(%[ id IN ( #{@branches.map(&:current_commit_id).map{|x|"'#{x}'"}.join(", ")} )]).uniq
-    #@repositories = Repository.where(%[ id IN ( #{@branches.map(&:repository_id).map{|x|"'#{x}'"}.join(", ")} )]).uniq
-    #@executions= @executions.select("id,created_at,tree_id,state,definition_name")
-
     if partial= request.headers['PARTIAL']
       render partial: partial, layout: false
     else

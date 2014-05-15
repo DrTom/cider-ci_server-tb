@@ -12,7 +12,6 @@ class Branch < ActiveRecord::Base
 
   default_scope {order(name: :asc)}
 
-  
   before_create do 
     self.id ||= SecureRandom.uuid
   end

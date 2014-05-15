@@ -23,10 +23,6 @@ class Workspace::CommitsController < WorkspaceController
 
     @commits = @commits.reorder(committer_date: :desc, depth: :desc)
 
-    @commits= @commits.includes(:executions)
-    @commits= @commits.includes(:commit_cache_signature)
-    @commits= @commits.includes(:repositories)
-
     @commits_cache_signatures = CommitCacheSignature \
       .where(%[ commit_id IN (#{@commits.map(&:id).map{|id| "'#{id}'"}.join(",").non_blank_or("NULL")}) ])
 

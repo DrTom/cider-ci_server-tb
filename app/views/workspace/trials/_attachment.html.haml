@@ -11,5 +11,5 @@
       %i.icon-download-alt
   %td
     - if attachment.content_length
-      = number_to_human_size(attachment.content_length)
+      = (number_to_human_size(attachment.content_length) rescue 'unknown')
   %td= attachment.content_type

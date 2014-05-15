@@ -18,7 +18,7 @@ class Execution < ActiveRecord::Base
   has_and_belongs_to_many :tags 
 
   has_many :commits, primary_key: 'tree_id', foreign_key: 'tree_id'  #through: :tree
-  has_many :branches, ->{reorder("branches.name ASC").uniq} ,through: :commits
+  has_many :branches, ->{uniq} ,through: :commits
   has_many :repositories, ->{reorder("").uniq}, through: :branches
 
   has_many :tasks #, foreign_key: [:specification_id,:tree_id]

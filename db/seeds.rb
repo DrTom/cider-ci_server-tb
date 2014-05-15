@@ -33,6 +33,7 @@ traits= (executor.traits || []).concat([
           'tightvnc',
         ]).sort.uniq
 
+
 executor.update_attributes!(
   host: "127.0.0.1",
   port: "8443",
@@ -40,6 +41,10 @@ executor.update_attributes!(
   ssl: true
 )
 
+executor.save!
+
+
+binding.pry
 
 ServerSettings.find.update_attributes! \
   repositories_path: '/Users/thomas/Programming/CIDER-CI/server-tb/tmp/repositories',
