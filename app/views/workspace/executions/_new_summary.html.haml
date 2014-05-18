@@ -8,12 +8,11 @@
   - speedup = (execution.accumulated_time/execution.duration).round(2) rescue nil
   - duration = execution.duration.round rescue nil
   - time = execution.accumulated_time.round rescue nil
-  - reload_delay = %(pending executing).include?(execution.state) ? 10 : 60
-  %table.table.summary{data:{reload:{enabled: true, delay: reload_delay,path: workspace_execution_path(execution),partial: "summary",cache_tag: cache_tag}}}
+
+  %table.table.summary
     %thead
     %tbody
       %tr
-        %td.stats{data: {state: execution.state}}= render "execution_stat", execution: execution
         - if speedup
           %td Speedup: #{speedup}
         - if duration
@@ -24,3 +23,7 @@
           %td 
             Processing time: 
             %span.humanize-duration{data: {duration: time}} #{time} seconds
+
+  .stats{data: {state: execution.state}}= render "new_execution_stat", execution: execution
+
+

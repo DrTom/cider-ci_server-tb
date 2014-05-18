@@ -7,64 +7,67 @@
 - cache [execution,admin?,cs.stats_signature,cs.repositories_signature,cs.commits_signature,cs.branches_signature,cs.tasks_signature,cs.trials_signature,@tasks_select_condition,@page] do |cache_tag|
   - tasks ||= @tasks
 
-  #execution.execution
+  - reload_timeout= %w(failed success).include?(execution.state) ? 30 : 3
+  #reload-page{data: { cache_tag: cache_tag, reload_timeout: reload_timeout}}
 
-    %ul.list-inline.actions.pull-right
-      - if admin?
+    #execution.execution
+
+      %ul.list-inline.actions.pull-right
+        - if admin?
+          %li
+            =link_to workspace_execution_path(execution), method: "DELETE", class: "btn btn-danger" do
+              %i.icon-trash
+              Delete
         %li
-          =link_to workspace_execution_path(execution), method: "DELETE", class: "btn btn-danger" do
-            %i.icon-trash
-            Delete
-      %li
-        =link_to edit_workspace_execution_path(execution), class: "btn btn-warning" do
-          %i.icon-edit
-          Edit
-      %li
-        =link_to retry_failed_workspace_execution_path(execution), method: 'POST', class: "btn btn-primary" do
-          %i.icon-retry
-          Retry failed
+          =link_to edit_workspace_execution_path(execution), class: "btn btn-warning" do
+            %i.icon-edit
+            Edit
+        %li
+          =link_to retry_failed_workspace_execution_path(execution,@filter_params), method: 'POST', class: "btn btn-primary" do
+            %i.icon-retry
+            Retry failed
 
 
-    %h1 Execution #{execution.definition_name}
+      %h1 Execution #{execution.definition_name}
 
-    = render 'tags', execution: execution, cache_tag: cache_tag
+      = render 'tags', execution: execution, cache_tag: cache_tag
 
-    = render 'summary', execution: execution, cache_tag: cache_tag
+      = render 'new_summary', execution: execution, cache_tag: cache_tag
 
-    .commits
-      %h2 #{ execution.commits.count > 1 ? "Commits" : "Commit"}
-      %table.commits.table.table-striped
-        %thead
-        %tbody
-          != render partial: "commit_tr", collection: execution.commits, as: :commit
+      .commits
+        %h2 #{ execution.commits.count > 1 ? "Commits" : "Commit"}
+        %table.commits.table.table-striped
+          %thead
+          %tbody
+            != render partial: "commit_tr", collection: execution.commits, as: :commit
 
-    .error
-      - unless execution.error.blank? 
-        .panel.panel-danger
+      .error
+        - unless execution.error.blank? 
+          .panel.panel-danger
+            .panel-heading
+              %h2.panel-title Error
+            .panel-body
+              %p 
+                This execution has errors. The common causes are a semantically 
+                incorrect specification or not existing objects in git during 
+                substitution.
+
+              %pre.script!= execution.error
+
+      = render 'tasks', execution: execution, tasks: tasks
+
+      .definition
+        %h2 Execution Definition
+
+        .panel.panel-default
           .panel-heading
-            %h2.panel-title Error
+            %h3.panel-title Definition
           .panel-body
-            %p 
-              This execution has errors. The common causes are a semantically 
-              incorrect specification or not existing objects in git during 
-              substitution.
+            %pre.script!= execution.specification.data.to_yaml
 
-            %pre.script!= execution.error
-
-    = render 'tasks', execution: execution, tasks: tasks
-
-    .definition
-      %h2 Execution Definition
-
-      .panel.panel-default
-        .panel-heading
-          %h3.panel-title Definition
-        .panel-body
-          %pre.script!= execution.specification.data.to_yaml
-
-      .panel.panel-default
-        .panel-heading
-          %h3.panel-title Substituted Definition
-        .panel-body
-          %pre.script!= execution.substituted_specification_data.to_yaml
+        .panel.panel-default
+          .panel-heading
+            %h3.panel-title Substituted Definition
+          .panel-body
+            %pre.script!= execution.substituted_specification_data.to_yaml
 

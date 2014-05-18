@@ -21,6 +21,7 @@
 #= require codemirror
 #= require moment
 #= require underscore
+#= require logger
 #= require_tree ./reload
 #= require_tree ./misc 
 

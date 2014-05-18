@@ -9,7 +9,7 @@
   - branches = commit.branches.uniq.sort #.reorder("branches.name ASC")
   - repositories = commit.repositories.uniq.sort
 
-  %tr.commit{data:{reload:{enabled: true, delay: 60, path: workspace_commit_path(commit),partial: "commit_tr", cache_tag: cache_tag}}}
+  %tr.commit
 
     %td.id.links
       -# =link_to workspace_commit_path(commit) do

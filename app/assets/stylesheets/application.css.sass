@@ -1,19 +1,26 @@
 @import jquery.ui.all
 @import codemirror
 
-$failed-color: hsla(360, 94%, 30%, 1)
-$success-color: hsla(181, 100%, 27%, 1)
-$pending-color: hsl(0, 0%, 60%)
-$executing-color: hsl(0, 0%, 60%)
 
 @import bootstrap
 @import 'font-awesome/font-awesome'
 @import 'icons'
 
+$cider-ci-success-color: $brand-success !default
+$cider-ci-failed-color: $brand-danger !default
+$cider-ci-pending-color: $gray-light !default
+$cider-ci-executing-color: $brand-warning !default
+
+
+@mixin striped-executing() 
+  //background-image: -webkit-linear-gradient($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent)
+  //background-image: -o-linear-gradient($angle, $color 25%, transparent 25%, transparent 50%, $color 50%, $color 75%, transparent 75%, transparent)
+  background-image:  repeating-linear-gradient(45deg,$cider-ci-success-color,$cider-ci-failed-color 3px, $cider-ci-success-color 6px)
+
 .success
-  color: $success-color !important
+  color: $cider-ci-success-color !important
 .failed 
-  color: $failed-color !important
+  color: $cider-ci-failed-color !important
 
 
 .commit-id
@@ -53,6 +60,22 @@ table.summary
         vertical-align: middle
 
 
+table.new-execution-stats
+  td
+    text-align: center
+    vertical-align: middle
+    color: $progress-bar-color !important
+    &.failed
+      background-color: $cider-ci-failed-color
+    &.success
+      background-color: $cider-ci-success-color !important
+    &.executing
+      @include striped-executing
+    &.pending
+      background-color: $gray-light !important
+
+
+
 table.execution-stats
   margin: 0px
   width: 12em
@@ -63,16 +86,16 @@ table.execution-stats
     border-style: solid
     &.failed
       color: white !important
-      border-color: $failed-color !important
-      background-color: $failed-color !important
+      border-color: $cider-ci-failed-color !important
+      background-color: $cider-ci-failed-color !important
     &.pending,&.executing
       color: darkgray
       background-color: darkgray !important
       border-color: darkgray !important
     &.success
       color: white !important
-      background-color: $success-color !important
-      border-color: $success-color !important
+      background-color: $cider-ci-success-color !important
+      border-color: $cider-ci-success-color !important
 
 ul.nested-inline
   display: inline
@@ -81,15 +104,26 @@ ul.nested-inline
     
 
 
+table.table.executions-table
+  tr
+    td.execution
+      font-size: 125%
+  tr.spacer
+    height: 0.25em
+
+
 .label-success
-  background-color: $success-color !important
-.label-success[href]   
-  background-color: darken($success-color, 10%) !important
+  background-color: $cider-ci-success-color !important
 
 .label-failed        
-  background-color: $failed-color !important
-.label-failed[href]   
-  background-color: darken($failed-color, 10%) !important
+  background-color: $cider-ci-failed-color !important
+
+.label-executing
+  @include striped-executing
+
+.label-pending
+  background-color: $cider-ci-pending-color !important
+
 
 
 

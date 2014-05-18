@@ -30,21 +30,11 @@ class Workspace::CommitsController < WorkspaceController
       [cs.commit_id,cs.branches_signature,cs.repositories_signature,cs.executions_signature]
     end
 
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false
-    else
-      render
-    end
 
   end
 
   def show
     @commit = Commit.find params[:id]
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false, locals: {execution: @execution}
-    else
-      render
-    end
   end
 
 end

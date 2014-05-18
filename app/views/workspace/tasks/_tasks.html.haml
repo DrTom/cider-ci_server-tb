@@ -6,19 +6,15 @@
 - cs = execution.execution_cache_signature
 - tasks ||= @tasks
 - cache [execution,cs.tasks_signature,cs.trials_signature,@tasks_select_condition,@page] do |cache_tag|
-  - delay = %(pending executing).include?(execution.state) ? 30 : [60*5,[30,(Time.zone.now - execution.updated_at)].max].min
-  - # we only need to replace when ids change
-  - reload_cache_tag =  Digest::MD5.hexdigest([tasks.map(&:id)].to_s)
-  #tasks.tasks{data:{reload:{enabled: true, delay: delay, partial: 'tasks', path: tasks_workspace_execution_path(execution,tasks_select_condition: @tasks_select_condition, page: @page), cache_tag: reload_cache_tag}}}
+  #tasks.tasks
 
     .pull-right
-      = form_tag workspace_execution_path(execution), method: 'GET', class: "form-inline" do
-
+      = form_tag workspace_execution_path(execution), method: 'GET', class: "form-inline well right-top-form" do
+        
         %fieldset
           .pull-right
             %ul.list-inline
               %li 
-
                 .form-group
                   %label.sr-only{for: "tasks_select_condition"}
                   = select_tag :tasks_select_condition, 
@@ -26,14 +22,26 @@
                     class: "form-control"
 
               %li
+                .form-group
+                  %label.sr-only{for: "name_substring_term"}
+                  =text_field_tag :name_substring_term, nil, placeholder: "substr OR substr",
+                    value: @name_substring_term, 
+                    class: "search-query form-control"
+
+              %li
+                = link_to workspace_execution_path(execution), class: 'btn btn-sm btn-warning' do
+                  %i.icon-remove-sign
+                  Reset
+
+
+              %li
                 =button_tag type: 'submit', class: 'btn btn-sm btn-primary' do
                   %i.icon-filter
-                  Apply
+                  Filter
 
     %h2 Tasks 
 
-
-
+    .clearfix
 
     -# use the ids instead of the cache tag for judging replacement
     %table.tasks.table.table-striped

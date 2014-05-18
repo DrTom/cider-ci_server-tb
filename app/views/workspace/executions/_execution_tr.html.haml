@@ -6,29 +6,21 @@
 - cs = @execution_cache_signatures ? @execution_cache_signatures.select{|cs| cs.execution_id == execution.id}.first :  execution.execution_cache_signature
 
 - cache [execution,cs.stats_signature,cs.commits_signature,cs.branches_signature,cs.tags_signature] do |cache_tag|
-  - reload_delay= (%w(pending executing).include? execution.state) ? 30 : 180
-  -# commits = @commits.select{|c| c.tree_id == execution.tree_id}.uniq
   - commits = execution.commits
 
-  %tr.execution{data:{reload:{enabled: true, delay: reload_delay, path: workspace_execution_path(execution),partial: "execution_tr", cache_tag: cache_tag}}}
+  %tr.execution{class: bootstrap_color_for_state(execution.state)}
 
     %td.execution
-      =link_to workspace_execution_path(execution) do
-        =render_execution_label(execution) do
-          =execution.definition_name
 
-    %td.execution-stat= render "execution_stat", execution: execution
+      %span.nowrap
+        %span<>
+          =link_to workspace_execution_path(execution), class: "label #{label_class_for_state(execution.state)}" do
+            %i{class: icon_class_for_state(execution.state)}<>
+        = link_to workspace_execution_path(execution)  do
+          %span{style: "margin-left: 0.5em"}=execution.definition_name.truncate(12)
+
 
     %td.created-at= render 'humanized_time_from_now', at: execution.created_at
-
-    %td.commits
-      %ul.list-unstyled
-        - commits.each do |commit|
-          %li
-            #{commit.committer_email.gsub(/@.*/,'').truncate(15)}:
-            %em= commit.subject.truncate(30)
-
-    %td.tags= render 'tags', execution: execution, cache_tag: cache_tag
 
     %td.repositories
       %ul.list-unstyled
@@ -38,24 +30,21 @@
               -# %i.icon-repository
               %strong.nowrap= repository.name
 
+    %td.tags= render 'tags', execution: execution, cache_tag: cache_tag
+
     %td.branches
       %ul.list-unstyled
         - execution.branches.select('branches.name,"commits"."committer_date",commits.created_at,commits.id').each do |branch|
-          %li= branch.name
+          %li
+            %strong= branch.name
 
-    
-    -# %td.repositories-and-branches
+    %td.commits
       %ul.list-unstyled
         - commits.each do |commit|
           %li
-            %ul.list-unstyled
-              - commit.repositories.each do |repository| 
-                %li<>
-                  %span.nowrap
-                    %i.icon-repository
-                    %strong.nowrap= repository.name
-                    %span>:
-                  %ul.list-inline{style: "display: inline"}
-                    = render partial: "branch_li", collection: commit.branches.where("repository_id = ?",repository.id), as: :branch, locals: {commit: commit}
+            #{commit.committer_email.gsub(/@.*/,'').truncate(15)}:
+            %em= commit.subject.truncate(30)
+
+  %tr.spacer
 
 

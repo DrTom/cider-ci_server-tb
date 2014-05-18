@@ -4,29 +4,6 @@
 
 - cache [params] do
 
-
-  %h1 
-    -case
-    -when is_branch_head_filter
-      %i.icon-branch-heads
-      Branch heads
-    -else
-      %i.icon-commits
-      Commits
-
-    -case
-    -when branch_names_filter.count == 1
-      of the branch #{branch_names_filter.join(", ")}
-    -when branch_names_filter.count > 1
-      of the branches #{branch_names_filter.join(", ")}
-
-    -case
-    -when repository_names_filter.count == 1
-      in the repository #{repository_names_filter.join(", ")}
-    -when repository_names_filter.count > 1
-      in the repositories #{repository_names_filter.join(", ")}
-
-
   .pull-right
 
     = form_tag workspace_commits_path, method: 'GET', class: "form-inline well right-top-form", role: 'form' do
@@ -83,3 +60,25 @@
                 %i.icon-filter
                 Filter
 
+
+  %h1 
+    -case
+    -when is_branch_head_filter
+      Branch heads
+    -else
+      Commits
+
+    -case
+    -when branch_names_filter.count == 1
+      of the branch #{branch_names_filter.join(", ")}
+    -when branch_names_filter.count > 1
+      of the branches #{branch_names_filter.join(", ")}
+
+    -case
+    -when repository_names_filter.count == 1
+      in the repository #{repository_names_filter.join(", ")}
+    -when repository_names_filter.count > 1
+      in the repositories #{repository_names_filter.join(", ")}
+
+
+  .clearfix

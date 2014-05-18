@@ -21,11 +21,6 @@ class Workspace::TasksController < WorkspaceController
 
   def show
     @task = Task.find params[:id]
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false
-    else
-      render
-    end
   end
 
 end

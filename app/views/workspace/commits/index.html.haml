@@ -5,11 +5,13 @@
 - commits ||= @commits
 - link_params ||= @link_params
 
-- cache [@link_params,@commits_cache_signatures_array] do
+- cache [@link_params,@commits_cache_signatures_array] do |cache_tag|
 
-  = render 'index_head', params: params
+  #reload-page.executions-page{data: {cache_tag: cache_tag, reload_timeout: 3}}
 
-  = render 'commits_table', commits: commits, link_params: link_params
+    = render 'index_head', params: params
 
-  = paginate commits, theme: 'default'
+    = render 'commits_table', commits: commits, link_params: link_params
+
+    = paginate commits, theme: 'default'
 

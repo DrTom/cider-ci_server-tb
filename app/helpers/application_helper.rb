@@ -4,6 +4,19 @@
 
 module ApplicationHelper
 
+  def bootstrap_color_for_state state
+    case state
+    when 'success'
+      'success'
+    when 'failed'
+      'danger'
+    when 'executing'
+      'warning'
+    else
+      ''
+    end
+  end
+
   def button_class_for_state state
     case state
     when "failed"
@@ -74,6 +87,10 @@ module ApplicationHelper
       'label-failed'
     when 'success'
       'label-success'
+    when 'pending'
+      'label-pending'
+    when 'executing','dispatched'
+      'label-executing'
     else
       'label-default' 
     end

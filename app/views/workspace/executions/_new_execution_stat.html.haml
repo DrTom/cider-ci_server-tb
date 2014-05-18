@@ -5,13 +5,16 @@
 - cs = @execution_cache_signatures ? @execution_cache_signatures.select{|cs| cs.execution_id == execution.id}.first :  execution.execution_cache_signature
 - cache [cs.stats_signature || execution] do |cache_tag|
   - _stat = execution.execution_stat
-  %table.table.execution-stats
+
+  %table.table.new-execution-stats
     %thead 
     %tbody
       %tr
-        - %w(failed executing pending success).each do |state|
+        - %w(failed executing success pending).each do |state|
           - if _stat[state] > 0
             - fraction= _stat[state]/_stat[:total].to_f
             %td{class: state,data:{ fraction: fraction },style: "width: #{fraction*100}%"}
               =_stat[state]
+              %i{class: icon_class_for_state(state)}
+
 

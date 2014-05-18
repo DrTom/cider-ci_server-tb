@@ -44,10 +44,8 @@ executor.update_attributes!(
 executor.save!
 
 
-binding.pry
-
 ServerSettings.find.update_attributes! \
-  repositories_path: '/Users/thomas/Programming/CIDER-CI/server-tb/tmp/repositories',
+  repositories_path: Rails.root.join('tmp','repositories').to_s,
   ui_context: 'cider-ci-dev',
   api_context: 'cider-ci-dev'
 

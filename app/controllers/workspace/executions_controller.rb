@@ -58,16 +58,9 @@ class Workspace::ExecutionsController < WorkspaceController
       .where(repositories: {name: repository_names_filter}) unless repository_names_filter.empty?
     @executions= @executions.joins(:tags).where(tags: {tag: execution_tags_filter}) if execution_tags_filter.count > 0
 
-
     @execution_cache_signatures = ExecutionCacheSignature \
       .where(%[ execution_id IN (#{@executions.map(&:id).map{|id| "'#{id}'"}.join(",").non_blank_or("NULL")}) ])\
       .select(:execution_id,:stats_signature,:commits_signature,:branches_signature,:tags_signature)
-
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false
-    else
-      render
-    end
   end
 
 
@@ -81,27 +74,14 @@ class Workspace::ExecutionsController < WorkspaceController
   def show
     @execution = Execution.find params[:id]
     set_and_filter_tasks params
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false, locals: {execution: @execution}
-    else
-      render
-    end
+    set_filter_params params
   end
 
   def retry_failed
     @execution = Execution.find params[:id]
     @execution.tasks.where(state: 'failed').each(&:create_trial)
-    redirect_to workspace_execution_path(@execution), flash: {success: "The failed tasks are scheduled for retry!"}
-  end
-
-  def tasks
-    @execution = Execution.find params[:id]
-    set_and_filter_tasks(params)
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false, locals: {execution: @execution, tasks: @tasks}
-    else
-      render 
-    end
+    set_filter_params params
+    redirect_to workspace_execution_path(@execution,@filter_params), flash: {success: "The failed tasks are scheduled for retry!"}
   end
 
   def update
@@ -114,13 +94,17 @@ class Workspace::ExecutionsController < WorkspaceController
       redirect_to workspace_execution_path(@execution), flash: {success: "The execution has been updated."}
     rescue Exception => e
       redirect_to edit_workspace_execution_path(@execution), flash: {error: e}
-
     end
   end
 
 
+  def set_filter_params params
+    @filter_params= params.slice(:tasks_select_condition,:name_substring_term)
+  end
+
   def set_and_filter_tasks params
     @tasks_select_condition = (params[:tasks_select_condition] || :with_failed_trials).to_sym
+    @name_substring_term= (params[:name_substring_term] || '')
     @page=params[:page]
     @tasks = @execution.tasks
     @tasks = case @tasks_select_condition
@@ -130,6 +114,15 @@ class Workspace::ExecutionsController < WorkspaceController
                @tasks.where(state: 'failed')
              else
                @tasks
+             end
+    @tasks = if @name_substring_term.blank?
+               @tasks
+             else
+               terms= @name_substring_term.split(/\s+OR\s+/)
+               ilike_where= terms.map{" tasks.name ILIKE ? "}.join(" OR ")
+               terms_matchers= terms.map{|term|  "%#{term}%"}
+               args=[ilike_where,terms_matchers].flatten
+               @tasks.where(*args)
              end
     @tasks= @tasks.reorder(:name).page(params[:page])
   end

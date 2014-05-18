@@ -3,12 +3,11 @@
 -#  See the LICENSE.txt file provided with this software.
 
 - task ||= @task
-- delay = %(pending executing).include?(task.state) ? 30 : 180
 - cache [task,task.trials] do |cache_tag|
-  %tr.task{id: task.id,data:{reload:{enabled: true, delay: delay, partial: 'task_tr', path: workspace_task_path(task), cache_tag: cache_tag}}}
+  %tr.task
     %td.state
       =link_to workspace_task_path(task) do
-        =label_for_state task.state
+        = render "label_for_state", state: task.state
     %td.name
       =link_to workspace_task_path(task) do
         =task.name

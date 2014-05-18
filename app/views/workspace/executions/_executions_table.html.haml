@@ -6,12 +6,9 @@
 - link_params ||= @link_params
 
 -# map{|cs| [cs.stats_signature,cs.commits_signature,cs.branches_signature] }
-- cache @execution_cache_signatures.map{|cs| [cs.execution_id,cs.stats_signature,cs.commits_signature,cs.branches_signature]} do 
+- cache @execution_cache_signatures.map{|cs| [cs.execution_id,cs.commits_signature,cs.branches_signature]} do 
 
-  - # we only need to replace the whole table when ids change
-  - reload_cache_tag = Digest::MD5.hexdigest(executions.map(&:id).to_s)
-
-  %table.executions.table.table-striped{data:{reload:{enabled: true, delay: 180, path: workspace_executions_path(link_params),partial: "executions_table", cache_tag: reload_cache_tag}}}
+  %table.table.executions-table
     %thead
     %tbody
       -# not particular rails like; but it is much faster for now 

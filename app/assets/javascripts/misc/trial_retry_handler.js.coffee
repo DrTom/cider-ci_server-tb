@@ -8,14 +8,13 @@
 # * have the summary be scheduled for reloading 
 
 $ -> 
-  $("table.tasks").on "ajax:beforeSend", (e)->
+  $(document).on "ajax:beforeSend","a.button.retry", (e)->
     $target = $(e.target)
-    if $target.hasClass("retry")
-      $target.addClass("disabled")
-      $target.removeAttr("data-remote")
-      $target.attr("href","#")
+    $target.addClass("disabled")
+    $target.removeAttr("data-remote")
+    $target.attr("href","#")
 
-  $("table.tasks").on "ajax:complete", (e)->
-    task_id= $(e.target).attr("data-task-id")
-    window.Reloader.reloadElement($("table.tasks tr.task[id='#{task_id}']")[0])
-    $("#execution .summary").attr({'data-reload-enabled': true,'data-reload-delay': 0})
+  $(document).on "ajax:complete","a.button.retry", (e)->
+    $target = $(e.target)
+    $target.html("OK")
+
