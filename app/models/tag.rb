@@ -5,4 +5,8 @@
 class Tag < ActiveRecord::Base
   has_and_belongs_to_many :executions
   has_and_belongs_to_many :branch_update_triggers
+
+  def self.tagify s
+    s.downcase.gsub(/[^0-9a-z\-\.]/i,'-').gsub(/-+/,'-')
+  end
 end

@@ -26,6 +26,14 @@ if defined? TorqueBox::Messaging::MessageProcessor
 
           @execution.tags= branch_update_trigger.tags
 
+          @commit.head_of_branches.each do |branch|
+            tag= Tag.find_or_create_by(tag: Tag.tagify(branch.name))
+            @execution.tags << tag unless @execution.tags.include? tag 
+            tag= Tag.find_or_create_by(tag: Tag.tagify(branch.repository.name))
+            @execution.tags << tag unless @execution.tags.include? tag 
+          end
+
+
           @execution.create_tasks_and_trials
 
         end

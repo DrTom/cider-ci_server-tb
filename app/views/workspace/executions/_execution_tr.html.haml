@@ -19,6 +19,14 @@
         = link_to workspace_execution_path(execution)  do
           %span{style: "margin-left: 0.5em"}=execution.definition_name.truncate(12)
 
+    %td.stats
+      %span.nowrap
+        - if %(failed success).include? execution.state
+          - if execution.state == 'success'
+            = execution.execution_stat.success
+          - else
+            ="#{execution.execution_stat.failed} / #{execution.execution_stat.total}"
+          
 
     %td.created-at= render 'humanized_time_from_now', at: execution.created_at
 

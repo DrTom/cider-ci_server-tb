@@ -6,7 +6,7 @@
 - link_params ||= @link_params
 
 
-- cache @execution_cache_signatures.map{|cs| [cs.stats_signature,cs.commits_signature,cs.branches_signature]} do |cache_tag|
+- cache @execution_cache_signatures.map{|cs| [@executions,cs.commits_signature,cs.branches_signature]} do |cache_tag|
 
   #reload-page.executions-page{data: {cache_tag: cache_tag, reload_timeout: 30}}
 

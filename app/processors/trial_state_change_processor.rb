@@ -8,13 +8,18 @@ if defined? TorqueBox::Messaging::MessageProcessor
     def on_message(msg)
       Rails.logger.info ["Received trial state change update message: ", msg]
 
-      trial_attributes= msg.deep_symbolize_keys
+      begin 
 
-      ExceptionHelper.with_log_and_reraise do
+        trial_attributes= msg.deep_symbolize_keys
+
         Trial.find_by(id: trial_attributes[:id]).task.instance_eval do
           check_and_retry!
           update_state!
         end
+
+      rescue Exception => e
+        Rails.logger.error e
+        Rails.logger.error ["Failed to process trial state change message:", msg]
       end
 
     end

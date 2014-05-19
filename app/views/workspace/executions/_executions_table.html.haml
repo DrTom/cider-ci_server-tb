@@ -5,13 +5,11 @@
 - executions ||= @executions
 - link_params ||= @link_params
 
--# map{|cs| [cs.stats_signature,cs.commits_signature,cs.branches_signature] }
-- cache @execution_cache_signatures.map{|cs| [cs.execution_id,cs.commits_signature,cs.branches_signature]} do 
 
-  %table.table.executions-table
-    %thead
-    %tbody
-      -# not particular rails like; but it is much faster for now 
-      - executions.each do |execution|
-        = render partial: 'execution_tr', locals: {execution: execution}
+%table.table.executions-table
+  %thead
+  %tbody
+    -# not particular rails like; but it is much faster for now 
+    - executions.each do |execution|
+      = render partial: 'execution_tr', locals: {execution: execution}
 

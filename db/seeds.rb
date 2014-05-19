@@ -46,6 +46,6 @@ executor.save!
 
 ServerSettings.find.update_attributes! \
   repositories_path: Rails.root.join('tmp','repositories').to_s,
-  ui_context: 'cider-ci-dev',
-  api_context: 'cider-ci-dev'
+  ui_context: '/cider-ci-dev',
+  api_context: '/cider-ci-dev'
 

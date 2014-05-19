@@ -19,7 +19,14 @@ class Workspace::ExecutionsController < WorkspaceController
                                          definition_name: @definition.name,
                                          tree_id: @commit.tree_id}.merge(params.require(:execution).permit(:priority)))
         params[:execution][:tags].split(",").map(&:strip).reject(&:blank?).each do |tag|
-          @execution.tags << Tag.find_or_create_by(tag: tag) rescue nil
+          tag = Tag.find_or_create_by(tag: tag)
+          @execution.tags << tag unless @execution.tags.include? tag 
+        end
+        @commit.head_of_branches.each do |branch|
+          tag= Tag.find_or_create_by(tag: Tag.tagify(branch.name))
+          @execution.tags << tag unless @execution.tags.include? tag 
+          tag= Tag.find_or_create_by(tag: Tag.tagify(branch.repository.name))
+          @execution.tags << tag unless @execution.tags.include? tag 
         end
       end
       Execution.create_tasks_and_trials_for @execution.id

@@ -10,7 +10,7 @@
     %thead 
     %tbody
       %tr
-        - %w(failed executing success pending).each do |state|
+        - %w(failed success executing pending).each do |state|
           - if _stat[state] > 0
             - fraction= _stat[state]/_stat[:total].to_f
             %td{class: state,data:{ fraction: fraction },style: "width: #{fraction*100}%"}

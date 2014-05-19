@@ -60,19 +60,20 @@ table.summary
         vertical-align: middle
 
 
-table.new-execution-stats
-  td
-    text-align: center
-    vertical-align: middle
-    color: $progress-bar-color !important
-    &.failed
-      background-color: $cider-ci-failed-color
-    &.success
-      background-color: $cider-ci-success-color !important
-    &.executing
-      @include striped-executing
-    &.pending
-      background-color: $gray-light !important
+.stats
+  table.table.new-execution-stats
+    td
+      text-align: center
+      vertical-align: middle
+      color: $progress-bar-color !important
+      &.failed
+        background-color: $cider-ci-failed-color
+      &.success
+        background-color: $cider-ci-success-color
+      &.executing
+        @include striped-executing
+      &.pending
+        background-color: $gray-light
 
 
 
