@@ -5,7 +5,7 @@ class CreateWelcomePageSettings < ActiveRecord::Migration
       t.integer :id
 
       t.text :welcome_message
-      t.text :radiator_config
+      t.json :radiator_config
 
       t.timestamps
     end

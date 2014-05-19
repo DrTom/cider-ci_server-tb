@@ -57,5 +57,20 @@ if welcome_page_settings.welcome_message.blank?
     welcome_message: "# Welcome to your installation of Cider-CI"
 end
   
+if welcome_page_settings.radiator_config.blank? 
+  welcome_page_settings.update_attributes! \
+    radiator_config:  YAML.load(%<---
+      rows: 
+      - name: Bash Demo Project
+        items: 
+        - reposiory_name: "Cider-CI Bash Demo Project"
+          branch_name: "master"
+          execution_name: "All tests"
+    >)
+
+end
+  
+
+
 
 

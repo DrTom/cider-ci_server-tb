@@ -614,7 +614,7 @@ CREATE TABLE users (
 CREATE TABLE welcome_page_settings (
     id integer NOT NULL,
     welcome_message text,
-    radiator_config text,
+    radiator_config json,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
     CONSTRAINT one_and_only_one CHECK ((id = 0))
