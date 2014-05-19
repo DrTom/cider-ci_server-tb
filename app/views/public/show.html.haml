@@ -7,6 +7,11 @@
 
 .cider-ci.text-center
 
+  - cache [WelcomePageSettings.find] do 
+    #welcome_message
+      =markdown(WelcomePageSettings.find.welcome_message)
+
+  %hr 
 
   %h2 About Cider-CI
 

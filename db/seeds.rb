@@ -44,8 +44,18 @@ executor.update_attributes!(
 executor.save!
 
 
+
 repo= Repository.find_or_initialize_by name: "Bash Demo Project"
 repo.update_attributes! \
   origin_uri: 'https://github.com/DrTom/cider-ci_demo-project-bash.git'
+
+
+welcome_page_settings= WelcomePageSettings.find
+
+if welcome_page_settings.welcome_message.blank? 
+  welcome_page_settings.update_attributes! \
+    welcome_message: "# Welcome to your installation of Cider-CI"
+end
+  
 
 
