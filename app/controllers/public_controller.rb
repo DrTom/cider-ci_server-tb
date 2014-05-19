@@ -4,14 +4,23 @@
 
 class PublicController < ApplicationController
   def show
-    @executions = Execution.reorder(created_at: :desc).limit(7).select("DISTINCT executions.*")
-    @commits = Commit.joins(:head_of_branches).joins(tree: :executions).limit(7).select("DISTINCT commits.*")
-
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false, locals: {executions: @executions,commits: @commits}
-    else
-      render
+    WelcomePageSettings.find.radiator_config.try(:[],"rows").map do |row|
+      {name: row.try(:[],"name"),
+       items: build_items(row)
+      }
     end
+  end
+
+  def build_items row
+    row.try(:[],"items").map do |item|
+      build_item item
+    end
+  end
+
+  def build_item item
+    repository= Repository.find_by(name: item["repository_name"])
+    binding.pry
+    branch= repository.branches.find_by(name: item["branch_name"])
   end
 
   def find_user_by_login login

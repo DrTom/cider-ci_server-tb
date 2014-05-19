@@ -63,7 +63,7 @@ if welcome_page_settings.radiator_config.blank?
       rows: 
       - name: Bash Demo Project
         items: 
-        - reposiory_name: "Cider-CI Bash Demo Project"
+        - repository_name: "Cider-CI Bash Demo Project"
           branch_name: "master"
           execution_name: "All tests"
     >)
