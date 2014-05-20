@@ -22,10 +22,12 @@ messaging:
 # services: 
   
 jobs:
+  trial_scripts_sweeper:
+    job: TrialScriptsSweeper
+    cron: '0 */15 * * * ?'
   trial_state_sweeper:
     job: TrialStateSweeper
     cron: '0 */1 * * * ?'
   attachments_sweeper:
     job: AttachmentsSweeper
-    cron: '0 0 */1 * * ?'
-
+    cron: '0 0 */15 * * ?'

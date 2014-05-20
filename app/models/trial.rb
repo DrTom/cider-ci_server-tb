@@ -58,6 +58,10 @@ class Trial < ActiveRecord::Base
     in_execution().where(%[ trials.updated_at <
       (now() - interval '#{TimeoutSettings.find.trial_execution_timeout_minutes} Minutes')])}
 
+  scope :with_scripts_to_clean, lambda{
+    where("json_array_length(scripts) > 0")
+    .where(%[ trials.created_at <
+      (now() - interval '#{TimeoutSettings.find.trial_scripts_retention_time_days} Days')])}
 
   def update_state!
     update_attributes! state: evaluate_state

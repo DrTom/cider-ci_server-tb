@@ -24,6 +24,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -464,7 +478,7 @@ CREATE TABLE trials (
     executor_id uuid,
     error text,
     state character varying(255) DEFAULT 'pending'::character varying NOT NULL,
-    scripts json,
+    scripts json DEFAULT '[]'::json NOT NULL,
     started_at timestamp without time zone,
     finished_at timestamp without time zone,
     created_at timestamp without time zone,
@@ -599,6 +613,7 @@ CREATE TABLE timeout_settings (
     trial_execution_timeout_minutes integer DEFAULT 5 NOT NULL,
     created_at timestamp without time zone,
     updated_at timestamp without time zone,
+    trial_scripts_retention_time_days integer DEFAULT 10 NOT NULL,
     CONSTRAINT attachment_retention_time_hours_positive CHECK ((attachment_retention_time_hours > 0)),
     CONSTRAINT one_and_only_one CHECK ((id = 0)),
     CONSTRAINT trial_dispatch_timeout_minutes_positive CHECK ((trial_dispatch_timeout_minutes > 0)),
@@ -740,14 +755,6 @@ ALTER TABLE ONLY tasks
 
 ALTER TABLE ONLY timeout_settings
     ADD CONSTRAINT timeout_settings_pkey PRIMARY KEY (id);
-
-
---
--- Name: trials_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY trials
-    ADD CONSTRAINT trials_pkey PRIMARY KEY (id);
 
 
 --
@@ -1060,6 +1067,13 @@ CREATE INDEX tags_to_tsvector_idx ON tags USING gin (to_tsvector('english'::regc
 
 
 --
+-- Name: trials_scripts_count_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE INDEX trials_scripts_count_idx ON trials USING btree (json_array_length(scripts));
+
+
+--
 -- Name: trigger_tag_idx; Type: INDEX; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1126,7 +1140,7 @@ CREATE RULE "_RETURN" AS
     count(trials.executor_id) AS current_load,
     ((count(trials.executor_id))::double precision / (executors.max_load)::double precision) AS relative_load
    FROM (executors
-   LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY ((ARRAY['dispatching'::character varying, 'executing'::character varying])::text[])))))
+   LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY (ARRAY[('dispatching'::character varying)::text, ('executing'::character varying)::text])))))
   GROUP BY executors.id;
 
 
@@ -1142,14 +1156,6 @@ CREATE TRIGGER update_updated_at_column_of_branches BEFORE UPDATE ON branches FO
 --
 
 CREATE TRIGGER update_updated_at_column_of_commits BEFORE UPDATE ON commits FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
-
---
--- Name: attachments_trial_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY attachments
-    ADD CONSTRAINT attachments_trial_id_fk FOREIGN KEY (trial_id) REFERENCES trials(id) ON DELETE CASCADE;
 
 
 --
@@ -1331,4 +1337,6 @@ INSERT INTO schema_migrations (version) VALUES ('74');
 INSERT INTO schema_migrations (version) VALUES ('80');
 
 INSERT INTO schema_migrations (version) VALUES ('81');
+
+INSERT INTO schema_migrations (version) VALUES ('82');
 

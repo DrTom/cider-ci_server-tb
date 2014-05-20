@@ -15,6 +15,13 @@
     = form.number_field :attachment_retention_time_hours, 
       class: 'from-control'
 
+  = form_group "Trial-Scripts retention time (days)", 
+    control_id: 'trial_scripts_retention_time_days',
+    cols_label: 5 do
+    = form.number_field :trial_scripts_retention_time_days, 
+      class: 'from-control'
+
+
   = form_group "Trial dispatch timeout (minutes)",
     control_id: 'timeout_settings_trial_dispatch_timeout_minutes',
     cols_label: 5 do

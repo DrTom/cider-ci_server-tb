@@ -54,11 +54,22 @@
 
 
   .scripts
-    %h2 
-      %i.icon-file-text-alt
-      Scripts
-    %ul.list-inline 
-      = render partial: 'script_label', collection: trial.scripts, as: :script
+    - if trial.scripts.blank?
 
-    %ul.list-unstyled.scripts
-      = render partial: 'script', collection: trial.scripts
+      .panel.panel-warning
+        .panel-heading
+          %h2 Scripts missing
+        .panel-body
+          %p This trial does not have any scripts associated with it.
+
+          %p 
+            They might have been erased afer some period of time in order to save space. 
+            Administrators can adjust the retention time.
+
+    - else
+      %h2 Scripts 
+      %ul.list-inline 
+        = render partial: 'script_label', collection: trial.scripts, as: :script
+
+      %ul.list-unstyled.scripts
+        = render partial: 'script', collection: trial.scripts
