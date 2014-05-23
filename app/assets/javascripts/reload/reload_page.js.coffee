@@ -10,6 +10,8 @@ $ ->
 
   skipNextReload= false
 
+  # doesn't work after replacement
+   
   $("form").change (args...)->
     logger.debug "skipNextReload"
     skipNextReload= true

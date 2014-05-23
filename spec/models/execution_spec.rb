@@ -20,7 +20,7 @@ describe Execution do
       repositories_path= Rails.root.join("tmp","repositories").to_s
       System.execute_cmd! "rm -rf #{repositories_path}"
       System.execute_cmd! "mkdir -p #{repositories_path}"
-      ServerSettings.find.update_attributes! repositories_path: repositories_path
+      Settings.git.repositories_path= repositories_path
       @repository = Repository.find_or_create_by name: "TestRepo", origin_uri: test_repo_path.to_s
       @repository.initialize_git
     end

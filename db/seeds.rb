@@ -44,8 +44,8 @@ executor.update_attributes!(
 executor.save!
 
 
-ServerSettings.find.update_attributes! \
-  repositories_path: Rails.root.join('tmp','repositories').to_s,
-  ui_context: '/cider-ci-dev',
-  api_context: '/cider-ci-dev'
+repo= Repository.find_or_initialize_by name: "Bash Demo Project"
+repo.update_attributes! \
+  origin_uri: 'https://github.com/DrTom/cider-ci_demo-project-bash.git'
+
 

@@ -1,8 +1,11 @@
 require 'spec_helper'
 
 describe Branch do
-  before :each do 
-    ServerSettings.find.update_attributes! repositories_path: Rails.root.join("repositories").to_s
+  before :all do 
+    repositories_path= Rails.root.join("tmp","repositories").to_s
+    System.execute_cmd! "rm -rf #{repositories_path}"
+    System.execute_cmd! "mkdir -p #{repositories_path}"
+    Settings.git.repositories_path= repositories_path
     @repository = FactoryGirl.create :repository
     @repository.initialize_git
     @repository.branches.destroy_all

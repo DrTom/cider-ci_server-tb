@@ -8,7 +8,7 @@ describe "Up and downloading of attachments", type: :feature, js: true do
     repositories_path= Rails.root.join("tmp","repositories").to_s
     System.execute_cmd! "rm -rf #{repositories_path}"
     System.execute_cmd! "mkdir -p #{repositories_path}"
-    ServerSettings.find.update_attributes! repositories_path: repositories_path
+    Settings.git.repositories_path= repositories_path
 
     ActiveRecord::Base.connection.tap do |connection|
       connection.tables.reject{|tn|tn=="schema_migrations"}.join(', ').tap do |tables|

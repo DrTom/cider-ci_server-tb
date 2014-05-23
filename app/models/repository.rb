@@ -32,7 +32,7 @@ class Repository < ActiveRecord::Base
   ######################## GIT ################################################
 
   def dir 
-    [ServerSettings.find.repositories_path,self.id].join("/")
+    [Settings.git.repositories_path,self.id].join("/")
   end
 
   def self.initialize_git repository_id
@@ -98,11 +98,11 @@ class Repository < ActiveRecord::Base
   def git_url options = {}
     path = Rails.application.routes.url_helpers.git_root_executors_api_v1_repository_path self
     url = Rails.application.routes.url_helpers.git_root_executors_api_v1_repository_url self,
-      { host: ServerSettings.find.server_host,
-        port: ServerSettings.find.server_port,
+      { host: Settings.http_server.host,
+        port: Settings.http_server.port,
         user: nil,
         password: nil,
-        protocol: (ServerSettings.find.server_ssl ? "https" : "http") }.merge(options)
+        protocol: (Settings.http_server.ssl ? "https" : "http") }.merge(options)
     Formatter.include_realative_url_root url,path
   end
 

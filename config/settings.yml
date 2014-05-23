@@ -1,0 +1,6 @@
+git:
+  repositories_path: "/Users/thomas/Programming/CIDER-CI/tmp/repositories"
+http_server:
+  host: localhost
+  port: 8080
+  ssl: false

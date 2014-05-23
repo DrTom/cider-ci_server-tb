@@ -151,6 +151,8 @@ GEM
       bundler (>= 1.3.0, < 2.0)
       railties (= 4.1.0)
       sprockets-rails (~> 2.0)
+    rails_config (0.4.2)
+      activesupport (>= 3.0)
     railties (4.1.0)
       actionpack (= 4.1.0)
       activesupport (= 4.1.0)
@@ -283,6 +285,7 @@ DEPENDENCIES
   pry
   psych
   rails (= 4.1.0)
+  rails_config
   rest-client
   rspec-rails
   sass-rails (>= 4.0.0)

@@ -574,22 +574,6 @@ CREATE TABLE schema_migrations (
 
 
 --
--- Name: server_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
---
-
-CREATE TABLE server_settings (
-    id integer NOT NULL,
-    server_ssl boolean DEFAULT false,
-    server_host character varying(255) DEFAULT 'localhost'::character varying,
-    server_port integer DEFAULT 8080,
-    ui_context character varying(255) DEFAULT '/cider-ci-dev'::character varying,
-    api_context character varying(255) DEFAULT '/cider-ci-api'::character varying,
-    repositories_path character varying(255) DEFAULT '/git/repositories'::character varying NOT NULL,
-    CONSTRAINT one_and_only_one CHECK ((id = 0))
-);
-
-
---
 -- Name: specifications; Type: TABLE; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -715,14 +699,6 @@ ALTER TABLE ONLY executors
 
 ALTER TABLE ONLY repositories
     ADD CONSTRAINT repositories_pkey PRIMARY KEY (id);
-
-
---
--- Name: server_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY server_settings
-    ADD CONSTRAINT server_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -1339,4 +1315,6 @@ INSERT INTO schema_migrations (version) VALUES ('80');
 INSERT INTO schema_migrations (version) VALUES ('81');
 
 INSERT INTO schema_migrations (version) VALUES ('82');
+
+INSERT INTO schema_migrations (version) VALUES ('84');
 

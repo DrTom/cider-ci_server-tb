@@ -34,6 +34,7 @@ gem 'rspec-rails', group: [:development, :test]
 gem 'sass-rails', '>= 4.0.0'
 gem 'sdoc', group: [:doc], require: false
 gem 'selenium-webdriver'
+gem 'rails_config'
 gem 'textacular', git:  'https://github.com/DrTom/textacular.git', ref: 'ab1f5677539b1014f238dc2c644c2e4ef9c56c12'
 gem 'therubyrhino', platform: :jruby
 gem 'torquebox', '3.1.0', platform: :jruby
