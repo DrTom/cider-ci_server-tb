@@ -45,7 +45,7 @@ executor.save!
 
 
 
-repo= Repository.find_or_initialize_by name: "Bash Demo Project"
+repo= Repository.find_or_initialize_by name: "Cider-CI Bash Demo Project"
 repo.update_attributes! \
   origin_uri: 'https://github.com/DrTom/cider-ci_demo-project-bash.git'
 
@@ -65,7 +65,7 @@ if welcome_page_settings.radiator_config.blank?
         items: 
         - repository_name: "Cider-CI Bash Demo Project"
           branch_name: "master"
-          execution_name: "All tests"
+          definition_name: "All tests"
     >)
 
 end

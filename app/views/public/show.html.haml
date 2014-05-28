@@ -13,7 +13,16 @@
 
   %hr 
 
-  %h1 Radiator
+  - @radiator_rows.each do |row |
+
+    %table.table 
+      %thead
+      %tbody
+        %tr
+          - row[:items].map(&:deep_symbolize_keys).each do |item|
+            %td{class: bootstrap_color_for_state(item[:execution][:state])}
+              %h1= item[:repository_name]
+              %h2= item[:branch_name]
 
   %hr 
 

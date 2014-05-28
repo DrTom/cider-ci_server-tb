@@ -4,11 +4,11 @@
 
 class PublicController < ApplicationController
   def show
-    WelcomePageSettings.find.radiator_config.try(:[],"rows").map do |row|
-      {name: row.try(:[],"name"),
-       items: build_items(row)
-      }
-    end
+    @radiator_rows= WelcomePageSettings.find
+      .radiator_config.try(:[],"rows").map do |row|
+        {name: row.try(:[],"name"),
+         items: build_items(row) }
+      end
   end
 
   def build_items row
@@ -19,8 +19,14 @@ class PublicController < ApplicationController
 
   def build_item item
     repository= Repository.find_by(name: item["repository_name"])
-    binding.pry
     branch= repository.branches.find_by(name: item["branch_name"])
+    execution= Execution.joins(commits: :branches) \
+      .where("branches.id = ?",branch.id) \
+      .where(definition_name: item["definition_name"]).first
+
+    item.merge( {repository: repository,
+                 branch: branch,
+                 execution:execution})
   end
 
   def find_user_by_login login
