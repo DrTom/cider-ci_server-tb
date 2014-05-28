@@ -4,40 +4,34 @@
 
 %li.dropdown.admin-frontpage-actions
   %a.dropdown-toggle{href: "#", data: {toggle: 'dropdown'}} 
+    %i.icon-administrate
     Administration
     %b.caret
   %ul.dropdown-menu
     %li
-      = link_to admin_users_path do
-        %i.icon-user
-        Users
+      = link_to admin_branch_update_triggers_path do
+        %i.icon-trigger
+        Branch update triggers
     %li
       = link_to admin_executors_path do
-        %i.icon-cogs
+        %i.icon-executor
         Executors
     %li
       = link_to admin_definitions_path do
-        %i.icon-wrench
+        %i.icon-execution-definition
         Execution definitions
     %li
       = link_to admin_repositories_path do
         %i.icon-repository
         Repositories
     %li
-      = link_to admin_branch_update_triggers_path do
-        %i.icon-trigger
-        Branch update triggers
+      = link_to admin_users_path do
+        %i.icon-user
+        Users
     %li.divider 
     %li
       = link_to edit_admin_timeout_settings_path do
+        %i.icon-timeout-settings
         Time and timeout settings
-    %li
-      = link_to edit_admin_server_settings_path do
-        Server settings
-    %li.divider
-    %li
-      = link_to admin_dispatch_trials_path, method: 'POST' do
-        Dispatch manually
-
 
 

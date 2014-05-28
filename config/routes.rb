@@ -84,7 +84,6 @@ CiderCI::Application.routes.draw do
 
   namespace 'admin' do
     resource :timeout_settings
-    resource :server_settings
     resources :branch_update_triggers
     resources :definitions
     resources :users do

@@ -25,6 +25,10 @@
               value: execution_tags_filter.join(", "), 
               data:{autocomplete_path: workspace_tags_path}, 
               class: "form-control input-sm"
+
+        %li
+          = render 'per_page_form_group'
+
         %li
           =link_to workspace_executions_path, class: 'btn btn-sm btn-warning' do
             %i.icon-remove-sign
@@ -34,9 +38,10 @@
             %i.icon-filter
             Filter
 
-    %p.help-block{style: "margin-left: 14px"}
-      :erb
-        <small>Values within one field are combined with logical <em>or</em>.
-        Multiple fields are combined with logical  <em>and<em>.</small>
+      .help-block{style: "margin-left: 14px"}
+        %small
+          :markdown
+            Values within one field are combined with logical _or_.
+            Multiple fields are combined with logical _and_.
 
 

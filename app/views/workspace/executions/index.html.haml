@@ -7,14 +7,17 @@
 
 
 - cache @execution_cache_signatures.map{|cs| [@executions,cs.commits_signature,cs.branches_signature]} do |cache_tag|
+ 
 
-  #reload-page.executions-page{data: {cache_tag: cache_tag, reload_timeout: 30}}
+  #reload-page.executions-page{data: {cache_tag: cache_tag, reload_timeout: 5}}
 
-    .pull-right=render 'index_filter_form'
+    .pull-right
+      =render 'index_filter_form'
 
     %h1 
-      %i.icon-cog
       Executions
+
+
 
     .clearfix
 

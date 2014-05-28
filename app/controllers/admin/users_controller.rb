@@ -26,7 +26,8 @@ class Admin::UsersController < AdminController
 
 
   def index
-    @users= User.page()
+    @users= User.page(params[:page])
+    @users= @users.per(Integer(params[:per_page])) unless params[:per_page].blank?
     @users= @users.where(is_admin: true) if is_admin_filter
     if search_term = user_text_search_filter
       # NOTE we include the email addresses; however, the pg parser recognizes

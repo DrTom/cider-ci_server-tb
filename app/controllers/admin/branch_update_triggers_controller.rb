@@ -47,7 +47,8 @@ class Admin::BranchUpdateTriggersController< AdminController
 
   def new
     @branch_update_trigger = BranchUpdateTrigger.new
-    @branches = Branch.all
+    @branches = Branch.joins(:repository) \
+      .reorder("repositories.name ASC", "branches.name ASC")
     @definitions = Definition.all
   end
 

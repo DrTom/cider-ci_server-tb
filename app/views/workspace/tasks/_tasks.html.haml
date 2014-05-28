@@ -19,14 +19,17 @@
                   %label.sr-only{for: "tasks_select_condition"}
                   = select_tag :tasks_select_condition, 
                     options_for_select([["All",:all],["With failed trials",:with_failed_trials],["Only failed",:failed]],@tasks_select_condition), 
-                    class: "form-control"
+                    class: "form-control input-sm"
 
               %li
                 .form-group
                   %label.sr-only{for: "name_substring_term"}
                   =text_field_tag :name_substring_term, nil, placeholder: "substr OR substr",
                     value: @name_substring_term, 
-                    class: "search-query form-control"
+                    class: "search-query form-control input-sm"
+
+              %li
+                = render 'per_page_form_group'
 
               %li
                 = link_to workspace_execution_path(execution), class: 'btn btn-sm btn-warning' do
