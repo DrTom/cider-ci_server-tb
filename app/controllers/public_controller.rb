@@ -18,11 +18,11 @@ class PublicController < ApplicationController
   end
 
   def build_item item
-    repository= Repository.find_by(name: item["repository_name"])
-    branch= repository.branches.find_by(name: item["branch_name"])
+    repository= Repository.find_by(name: item["repository_name"]) rescue nil
+    branch= repository.branches.find_by(name: item["branch_name"]) rescue nil
     execution= Execution.joins(commits: :branches) \
       .where("branches.id = ?",branch.id) \
-      .where(definition_name: item["definition_name"]).first
+      .where(definition_name: item["definition_name"]).first rescue nil
 
     item.merge( {repository: repository,
                  branch: branch,

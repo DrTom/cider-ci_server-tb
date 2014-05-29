@@ -59,13 +59,20 @@ end
   
 if welcome_page_settings.radiator_config.blank? 
   welcome_page_settings.update_attributes! \
-    radiator_config:  YAML.load(%<---
-      rows: 
+    radiator_config:  YAML.load(%<
+      ---
+      rows:
       - name: Bash Demo Project
-        items: 
-        - repository_name: "Cider-CI Bash Demo Project"
-          branch_name: "master"
-          definition_name: "All tests"
+        items:
+        - repository_name: Cider-CI Bash Demo Project
+          branch_name: master
+          definition_name: All tests
+        - repository_name: Cider-CI Bash Demo Project
+          branch_name: wip
+          definition_name: All tests
+        - repository_name: No repository
+          branch_name: nix
+          definition_name: No tests
     >)
 
 end

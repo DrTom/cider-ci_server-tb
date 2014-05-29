@@ -2,10 +2,7 @@
 -#  Licensed under the terms of the GNU Affero General Public License v3.
 -#  See the LICENSE.txt file provided with this software.
 
-- commits ||= @commits
-- executions ||= @executions
-
-.cider-ci.text-center
+#welcome-page.cider-ci.text-center
 
   - cache [WelcomePageSettings.find] do 
     #welcome_message
@@ -13,16 +10,29 @@
 
   %hr 
 
-  - @radiator_rows.each do |row |
+  %section.radiator
 
-    %table.table 
-      %thead
-      %tbody
-        %tr
-          - row[:items].map(&:deep_symbolize_keys).each do |item|
-            %td{class: bootstrap_color_for_state(item[:execution][:state])}
-              %h1= item[:repository_name]
-              %h2= item[:branch_name]
+    - @radiator_rows.each do |row |
+
+      %table.table.radiator-table
+        %thead
+        %tbody
+          %tr
+            - row[:items].map(&:deep_symbolize_keys).each do |item|
+              - state_class= (bootstrap_color_for_state(item[:execution][:state]) rescue 'active')
+              %td.branch{class: "#{state_class}"}
+                %h3= item[:repository_name]
+                %h2= item[:branch_name]
+                %h4= item[:definition_name]
+
+                - if branch= item[:branch] and commit= branch.current_commit
+                  .commit 
+                    %p.committer-date=render 'humanized_time_from_now', at: commit.committer_date
+                    %p 
+                      %span.commit-id= commit.id[0..5]
+                      = render 'remote_links', commit: commit, repositories: commit.repositories.uniq.sort
+
+
 
   %hr 
 

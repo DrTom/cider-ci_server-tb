@@ -1,0 +1,29 @@
+-#  Copyright (C) 2013, 2014 Dr. Thomas Schank  (DrTom@schank.ch, Thomas.Schank@algocon.ch)
+-#  Licensed under the terms of the GNU Affero General Public License v3.
+-#  See the LICENSE.txt file provided with this software.
+
+%h1 
+  Edit welcome page settings
+
+= form_for @welcome_page_settings,  
+  url: admin_welcome_page_settings_path, 
+  html: {class: "form-horizontal"} do |form| 
+
+
+
+  =form_group "Message", control_id: "welcome_message", cols_control: 8 do
+    = text_area :welcome_page_settings, :welcome_message, 
+      value: @welcome_message, 
+      class: "form-control", style: "height: 20em" 
+
+  =form_group "Radiator Config", control_id: "radiator_config_yaml", cols_control: 8 do
+    = text_area :welcome_page_settings, :radiator_config_yaml, 
+      value: @radiator_config_yaml, 
+      class: "form-control", style: "height: 20em" 
+
+
+  =form_group "" do
+    = button_tag type: 'submit', 
+      class: "btn btn-primary pull-right" do
+      Save
+

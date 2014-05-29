@@ -24,6 +24,20 @@ COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
+-- Name: pg_trgm; Type: EXTENSION; Schema: -; Owner: -
+--
+
+CREATE EXTENSION IF NOT EXISTS pg_trgm WITH SCHEMA public;
+
+
+--
+-- Name: EXTENSION pg_trgm; Type: COMMENT; Schema: -; Owner: -
+--
+
+COMMENT ON EXTENSION pg_trgm IS 'text similarity measurement and index searching based on trigrams';
+
+
+--
 -- Name: uuid-ossp; Type: EXTENSION; Schema: -; Owner: -
 --
 
@@ -734,14 +748,6 @@ ALTER TABLE ONLY timeout_settings
 
 
 --
--- Name: trials_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
---
-
-ALTER TABLE ONLY trials
-    ADD CONSTRAINT trials_pkey PRIMARY KEY (id);
-
-
---
 -- Name: users_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -1132,7 +1138,7 @@ CREATE RULE "_RETURN" AS
     count(trials.executor_id) AS current_load,
     ((count(trials.executor_id))::double precision / (executors.max_load)::double precision) AS relative_load
    FROM (executors
-   LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY ((ARRAY['dispatching'::character varying, 'executing'::character varying])::text[])))))
+   LEFT JOIN trials ON (((trials.executor_id = executors.id) AND ((trials.state)::text = ANY (ARRAY[('dispatching'::character varying)::text, ('executing'::character varying)::text])))))
   GROUP BY executors.id;
 
 
@@ -1148,14 +1154,6 @@ CREATE TRIGGER update_updated_at_column_of_branches BEFORE UPDATE ON branches FO
 --
 
 CREATE TRIGGER update_updated_at_column_of_commits BEFORE UPDATE ON commits FOR EACH ROW EXECUTE PROCEDURE update_updated_at_column();
-
-
---
--- Name: attachments_trial_id_fk; Type: FK CONSTRAINT; Schema: public; Owner: -
---
-
-ALTER TABLE ONLY attachments
-    ADD CONSTRAINT attachments_trial_id_fk FOREIGN KEY (trial_id) REFERENCES trials(id) ON DELETE CASCADE;
 
 
 --
