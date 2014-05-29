@@ -32,8 +32,8 @@ CiderCI::Application.routes.draw do
 
     resource :session, only: [:edit,:update]
 
-    resources :tags, only: [:index]
-
+    # TODO: doesn't work of the tag contains dots o_O
+    resources :tags, only: [:index, :show]
 
     get 'branch_heads' #, controller: "workspace" 
 

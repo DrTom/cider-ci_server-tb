@@ -20,5 +20,11 @@ class Workspace::TagsController < WorkspaceController
     end
 
   end
+  
+  def show
+    # we just redirect to the filtered execution view for now…
+    # since it's not a real route, we need to include the path (like "/ci") ourselves!
+    redirect_to "#{env['SCRIPT_NAME']}/workspace/executions?utf8=%E2%9C%93&execution[tags]=#{params[:id]}&per_page=50"
+  end
 
 end
