@@ -21,7 +21,7 @@
         %li
           .form-group
             %label.sr-only{for: "execution_tags"}
-            = text_field :execution , :tags, placeholder: "tag 1, tag 2, ...",
+            = text_field_tag :execution_tags, nil, placeholder: "tag 1, tag 2, ...",
               value: execution_tags_filter.join(", "), 
               data:{autocomplete_path: workspace_tags_path}, 
               class: "form-control input-sm"

@@ -57,7 +57,7 @@ class Workspace::ExecutionsController < WorkspaceController
   end
 
   def index
-    @link_params = params.slice(:branch,:page,:repository,:execution)
+    @link_params = params.slice(:branch,:page,:repository,:execution_tags)
     @executions = Execution.reorder(created_at: :desc).page(params[:page])
     @executions= @executions.joins({commits: :branches}) \
       .where(branches:{name: branch_names_filter}) unless branch_names_filter.empty?
@@ -80,6 +80,7 @@ class Workspace::ExecutionsController < WorkspaceController
   end
 
   def show
+    @link_params = params.slice(:branch,:page,:repository,:execution_tags)
     @execution = Execution.find params[:id]
     set_and_filter_tasks params
     set_filter_params params

@@ -21,8 +21,8 @@ class WorkspaceController < ApplicationController
     :with_execution_filter
 
   def execution_tags_filter 
-    params.try('[]',"execution").try('[]',:tags).try(:nil_or_non_blank_value) \
-      .split(",").map(&:strip).reject(&:blank?) rescue []
+    params.try('[]',"execution_tags").try(:nil_or_non_blank_value) \
+      .split(",").map(&:strip).reject(&:blank?).sort().uniq() rescue []
   end
 
   def repository_names_filter 
