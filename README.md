@@ -6,25 +6,15 @@ This component runs in the application server under the
 [TorqueBox](http://torquebox.org/) stack.
 
 
-## Simple setup for hacking on the Frontend
+## Developing the frontend only
 
-caveats:
-- you'll need a db dump from a real production instance
-- it doesn't do anything besides showing the UI
+It is possible to run this part of Cider-CI in development mode without
+connecting it to the other Cider-CI services. It is also possible to use MRI
+ruby (instead of JRuby, or the whole Torquebox stack even) in development mode. 
 
-1. edit config/database.yml 
-
-2. run this:
-    ````sh
-    PORT=3333
-    DUMP="cider_ci_production_dump.pgbin"
-    bundle
-    rake db:create db:migrate
-    export RAILS_RELATIVE_URL_ROOT='/ci'
-    pg_restore --disable-triggers  -O -x -d cider_ci_dev "$DUMP"
-    sleep 3 && open http://localhost:$PORT/ci &
-    rails s -p $PORT
-    ````
+There will be no real interaction, e.g. creating or even running an execution.
+It is therefore generally helpful to load some data into the database, e.g.
+from a dump of your production server. 
 
 
 ## License
