@@ -2,11 +2,41 @@
 -#  Licensed under the terms of the GNU Affero General Public License v3.
 -#  See the LICENSE.txt file provided with this software.
 
-- commits ||= @commits
-- executions ||= @executions
+#welcome-page.cider-ci.text-center
 
-.cider-ci.text-center
+  - cache [WelcomePageSettings.find] do 
+    #welcome_message
+      =markdown(WelcomePageSettings.find.welcome_message)
 
+  %hr 
+
+  #reload-page{data: { reload_timeout: 30}}
+
+
+    %section.radiator
+
+      - @radiator_rows.each do |row |
+
+        %table.table.radiator-table
+          %thead
+          %tbody
+            %tr
+              - row[:items].map(&:deep_symbolize_keys).each do |item|
+                - state_class= (bootstrap_color_for_state(item[:execution][:state]) rescue 'active')
+                %td.branch{class: "#{state_class}"}
+                  %h3= item[:repository_name]
+                  %h2= item[:branch_name]
+                  %h4= item[:definition_name]
+
+                  - if branch= item[:branch] and commit= branch.current_commit
+                    .commit 
+                      %p.committer-date=render 'humanized_time_from_now', at: commit.committer_date
+                      %p 
+                        %span.commit-id= commit.id[0..5]
+                        = render 'remote_links', commit: commit, repositories: commit.repositories.uniq.sort
+
+
+  %hr 
 
   %h2 About Cider-CI
 

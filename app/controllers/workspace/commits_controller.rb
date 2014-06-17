@@ -8,6 +8,8 @@ class Workspace::CommitsController < WorkspaceController
     @link_params = params.slice(:branch,:commit_text,:page,:repository)
 
     @commits = Commit.distinct.page(params[:page])
+    @commits= @commits.per(Integer(params[:per_page])) unless params[:per_page].blank?
+
 
     @commits = @commits.joins(:branches) \
       .where(branches:{name: branch_names_filter}) unless branch_names_filter.empty?

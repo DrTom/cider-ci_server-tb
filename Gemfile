@@ -10,6 +10,7 @@ gem 'rails', '4.1.0'
 
 #gem 'torquebox-backstage', platform: :jruby, group: [:development]
 #gem 'twister', :path=> '/Users/thomas/Programming/ROR/twister'
+#gem 'rack-mini-profiler'
 gem 'bcrypt-ruby'
 gem 'bootstrap-sass', '~> 3.1.1'
 gem 'capybara', group: [:test]
@@ -17,6 +18,7 @@ gem 'coffee-rails', '>= 4.0.0'
 gem 'factory_girl', group: [:development, :test]
 gem 'factory_girl_rails', group: [:development, :staging, :test]
 gem 'faker', group: [:development, :test]
+gem 'font-awesome-sass'
 gem 'foreigner'
 gem 'haml-contrib'
 gem 'haml-rails'
@@ -28,13 +30,12 @@ gem 'kramdown'
 gem 'newrelic_rpm'
 gem 'pry', group: [:development, :test]
 gem 'psych', platform: :mri # (j)psych is yet directly included in jruby, change when gemified
-#gem 'rack-mini-profiler'
+gem 'rails_config'
 gem 'rest-client'
 gem 'rspec-rails', group: [:development, :test]
 gem 'sass-rails', '>= 4.0.0'
 gem 'sdoc', group: [:doc], require: false
 gem 'selenium-webdriver'
-gem 'rails_config'
 gem 'textacular', git:  'https://github.com/DrTom/textacular.git', ref: 'ab1f5677539b1014f238dc2c644c2e4ef9c56c12'
 gem 'therubyrhino', platform: :jruby
 gem 'torquebox', '3.1.0', platform: :jruby

@@ -11,7 +11,7 @@
   -moz-osx-font-smoothing: grayscale
 
 
-.icon-add:before, .icon-branch-heads:before
+.icon-add:before
   @include font-awesome
   content: $fa-var-plus-circle
 
@@ -19,9 +19,13 @@
   @include font-awesome
   content: $fa-var-user-md
 
+.icon-administrate:before
+  @include font-awesome
+  content: $fa-var-wrench
+
 .icon-branch-head:before, .icon-branch-heads:before
   @include font-awesome
-  content: $fa-var-sitemap
+  content: $fa-var-anchor
 
 .icon-bitbucket:before
   @include font-awesome
@@ -55,6 +59,10 @@
 .icon-executor:before
   @include font-awesome
   content: $fa-var-cogs
+
+.icon-execution-definition:before
+  @include font-awesome
+  content: $fa-var-indent
 
 .icon-failed:before
   @include font-awesome
@@ -116,7 +124,11 @@
 
 .icon-trigger:before
   @include font-awesome
-  content: $fa-var-lightbulb-o
+  content: $fa-var-bolt
+
+.icon-timeout-settings:before
+  @include font-awesome
+  content: $fa-var-clock-o
 
 .icon-unchecked:before
   @include font-awesome
@@ -129,6 +141,11 @@
 .icon-warning:before
   @include font-awesome
   content: $fa-var-exclamation-triangle
+
+.icon-welcome-page-settings:before
+  @include font-awesome
+  content: $fa-var-align-center
+
 
 
 

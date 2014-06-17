@@ -3,8 +3,8 @@
 
 
 @import bootstrap
-@import 'font-awesome/font-awesome'
-@import 'icons'
+@import font-awesome
+@import icons
 
 $cider-ci-success-color: $brand-success !default
 $cider-ci-failed-color: $brand-danger !default
@@ -103,6 +103,17 @@ ul.nested-inline
   >li
     display: inline
     
+
+#welcome-page
+  .radiator
+    table.radiator-table
+      table-layout: fixed
+      td.branch
+        border: 0.5em solid white 
+        p
+          margin-bottom: 0.3em
+          
+
 
 
 table.table.executions-table

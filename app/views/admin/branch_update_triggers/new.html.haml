@@ -22,7 +22,7 @@
     =text_field :branch_update_trigger, :tags, 
       placeholder: "new tag 1, new tag 2, ...", 
       data:{autocomplete_path: workspace_tags_path}, 
-      value: @branch_update_trigger.tags.join(", "), class: "form-control"
+      value: @branch_update_trigger.tags.to_a.join(", "), class: "form-control"
 
   = form_group "Active", control_id: "branch_update_trigger_active" do
     .checkbox

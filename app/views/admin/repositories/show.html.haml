@@ -4,14 +4,20 @@
 
 - repository = @repository
 
-%h1= repository.name
-
-.actions
+.pull-right.actions
   %ul.actions.list-inline
     %li.delete
       = link_to admin_repository_path(repository), method: 'DELETE', class: "button btn btn-sm btn-danger" do
         %i.icon-delete
         Delete
+    %li.edit
+      = link_to edit_admin_repository_path(repository), class: "button btn btn-sm btn-warning" do
+        %i.icon-edit
+        Edit
+
+
+
+%h1 Repository "#{repository.name}"
 
 
 %h2 Branches
@@ -20,7 +26,10 @@
   %tbody
     - @repository.branches.reorder(updated_at: :desc).each do |branch|
       %tr.branch-row
-        %td= branch.name
+        %td
+          =link_to workspace_commits_path({ repository: {names: @repository.name}, 
+            branch:{names: branch.name}}) do
+            =branch.name
         %td 
           updated
           =render 'humanized_time_from_now', at:  branch.updated_at
@@ -31,11 +40,6 @@
 .repository-properties{id: @repository.id}
   %h2 Properties
   %ul.actions.list-inline
-    %li.edit
-      = link_to edit_admin_repository_path(repository), class: "button btn btn-sm btn-warning" do
-        %i.icon-edit
-        Edit
-
   %table.table.table-striped
     %thead
     %tbody

@@ -63,6 +63,7 @@ class Workspace::ExecutionsController < WorkspaceController
       .where(branches:{name: branch_names_filter}) unless branch_names_filter.empty?
     @executions= @executions.joins({commits: {branches: :repository}}).distinct \
       .where(repositories: {name: repository_names_filter}) unless repository_names_filter.empty?
+    @executions= @executions.per(Integer(params[:per_page])) unless params[:per_page].blank?
     @executions= @executions.joins(:tags).where(tags: {tag: execution_tags_filter}) if execution_tags_filter.count > 0
 
     @execution_cache_signatures = ExecutionCacheSignature \
@@ -106,8 +107,10 @@ class Workspace::ExecutionsController < WorkspaceController
 
 
   def set_filter_params params
-    @filter_params= params.slice(:tasks_select_condition,:name_substring_term)
+    @filter_params= params.slice(:tasks_select_condition,:name_substring_term,:per_page)
   end
+
+
 
   def set_and_filter_tasks params
     @tasks_select_condition = (params[:tasks_select_condition] || :with_failed_trials).to_sym
@@ -132,6 +135,7 @@ class Workspace::ExecutionsController < WorkspaceController
                @tasks.where(*args)
              end
     @tasks= @tasks.reorder(:name).page(params[:page])
+    @tasks= @tasks.per(Integer(params[:per_page])) unless params[:per_page].blank?
   end
 
 end

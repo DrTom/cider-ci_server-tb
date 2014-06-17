@@ -44,8 +44,40 @@ executor.update_attributes!(
 executor.save!
 
 
-repo= Repository.find_or_initialize_by name: "Bash Demo Project"
+
+repo= Repository.find_or_initialize_by name: "Cider-CI Bash Demo Project"
 repo.update_attributes! \
   origin_uri: 'https://github.com/DrTom/cider-ci_demo-project-bash.git'
+
+
+welcome_page_settings= WelcomePageSettings.find
+
+if welcome_page_settings.welcome_message.blank? 
+  welcome_page_settings.update_attributes! \
+    welcome_message: "# Welcome to your installation of Cider-CI"
+end
+  
+if welcome_page_settings.radiator_config.blank? 
+  welcome_page_settings.update_attributes! \
+    radiator_config:  YAML.load(%<
+      ---
+      rows:
+      - name: Bash Demo Project
+        items:
+        - repository_name: Cider-CI Bash Demo Project
+          branch_name: master
+          definition_name: All tests
+        - repository_name: Cider-CI Bash Demo Project
+          branch_name: wip
+          definition_name: All tests
+        - repository_name: No repository
+          branch_name: nix
+          definition_name: No tests
+    >)
+
+end
+  
+
+
 
 

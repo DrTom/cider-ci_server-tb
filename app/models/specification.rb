@@ -9,6 +9,8 @@ class Specification < ActiveRecord::Base
     instance.id = Specification.id_hash(instance.data)
   end
   serialize :data, YamlSerializer
+
+  has_many :definitions
   
   validate :id_matches_data, on: :update
 

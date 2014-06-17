@@ -72,6 +72,10 @@ module ApplicationHelper
            block_output: capture(opts.merge({control_id: control_id}),&block)
   end
 
+  def markdown(source)
+    Kramdown::Document.new(source).to_html.html_safe
+  end
+
   def render_executor_row executor, &block
     render "executor_row",executor: executor, block_output: capture(&block)
   end

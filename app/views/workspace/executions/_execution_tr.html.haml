@@ -20,14 +20,21 @@
           %span{style: "margin-left: 0.5em"}=execution.definition_name.truncate(12)
 
     %td.stats
-      %span.nowrap
-        - if %(failed success).include? execution.state
-          - if execution.state == 'success'
-            = execution.execution_stat.success
-          - else
-            ="#{execution.execution_stat.failed} / #{execution.execution_stat.total}"
-          
+      - if %(failed success).include? execution.state
+        - _stat = execution.execution_stat
+        - failed_fraction= _stat[:failed]/_stat[:total].to_f 
+        - success_fraction= _stat[:success]/_stat[:total].to_f 
+        .progress{style: "margin-bottom: 0.2em"}
+          .progress-bar.progress-bar-danger{style: "width: #{failed_fraction * 100}%"}
+          .progress-bar.progress-bar-success{style: "width: #{success_fraction * 100}%"}
+            - if execution.state == 'success'
+              = execution.execution_stat.success
 
+        - if execution.state == 'failed'
+          %span.nowrap
+            ="#{execution.execution_stat.failed} / #{execution.execution_stat.total}"
+
+ 
     %td.created-at= render 'humanized_time_from_now', at: execution.created_at
 
     %td.repositories

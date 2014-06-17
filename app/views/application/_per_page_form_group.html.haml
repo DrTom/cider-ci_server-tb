@@ -1,0 +1,7 @@
+.form-group
+  %label.sr-only{for: "per_page"}
+  = select_tag :per_page, 
+    options_for_select([6,12,25,50].map{|pp| ["#{pp} Per page",pp]}, params[:per_page] || 12), 
+    class: "form-control input-sm"
+
+

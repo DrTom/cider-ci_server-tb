@@ -4,14 +4,36 @@
 
 class PublicController < ApplicationController
   def show
-    @executions = Execution.reorder(created_at: :desc).limit(7).select("DISTINCT executions.*")
-    @commits = Commit.joins(:head_of_branches).joins(tree: :executions).limit(7).select("DISTINCT commits.*")
+    @radiator_rows= 
+      begin 
+        WelcomePageSettings.find
+        .radiator_config.try(:[],"rows").map do |row|
+          {name: row.try(:[],"name"),
+           items: build_items(row) }
+        end
+      rescue Exception => e
+        Rails.logger.warn ["Failed to parse radiator config",Formatter.exception_to_log_s(e)]
+        flash["error"]="Failed to build the radiator, see the logs for details."
+        []
+      end
+  end
 
-    if partial= request.headers['PARTIAL']
-      render partial: partial, layout: false, locals: {executions: @executions,commits: @commits}
-    else
-      render
+  def build_items row
+    row.try(:[],"items").map do |item|
+      build_item item
     end
+  end
+
+  def build_item item
+    repository= Repository.find_by(name: item["repository_name"]) rescue nil
+    branch= repository.branches.find_by(name: item["branch_name"]) rescue nil
+    execution= Execution.joins(commits: :branches) \
+      .where("branches.id = ?",branch.id) \
+      .where(definition_name: item["definition_name"]).first rescue nil
+
+    item.merge( {repository: repository,
+                 branch: branch,
+                 execution:execution})
   end
 
   def find_user_by_login login

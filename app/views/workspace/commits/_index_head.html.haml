@@ -8,7 +8,7 @@
 
     = form_tag workspace_commits_path, method: 'GET', class: "form-inline well right-top-form", role: 'form' do
       %fieldset 
-        .pull-right
+        .pull-left
           %ul.list-inline
             %li
               .form-group
@@ -17,26 +17,26 @@
                   value: repository_names_filter.join(", "), 
                   autofocus: true,
                   data: {autocomplete_path: names_workspace_repositories_path}, 
-                  class: "input-medium form-control"
+                  class: "input-medium form-control input-sm"
             %li
               .form-group
                 %label.sr-only{for: "branch_names"}
                 = text_field :branch, :names, placeholder: "Branch name 1, ...",
                   value: branch_names_filter.join(", "), 
                   data:{autocomplete_path: names_workspace_branches_path}, 
-                  class: "input-medium form-control"
+                  class: "input-medium form-control input-sm"
             %li
               .form-group
                 %label.sr-only{for: "commit_text"}
                 =text_field :commit, :text, placeholder: "Commits text search",
                   value: commit_text_search_filter, 
-                  class: "search-query form-control"
+                  class: "search-query form-control input-sm"
 
-
-        %p.help-block{style: "margin-left: 14px"}
-          :erb
-            <small>Values within one field are combined with logical <em>or</em>.
-            Multiple fields are combined with logical  <em>and<em>.</small>
+          .help-block{style: "margin-left: 14px"}
+            %small
+              :markdown
+                Values within one field are combined with logical _or_.
+                Multiple fields are combined with logical  _and_.
 
       %fieldset 
         .pull-right
@@ -51,12 +51,18 @@
                 %label
                   = check_box_tag :with_execution, true, with_execution_filter, class: "inline" 
                 With execution
+
             %li
-              = link_to workspace_commits_path, class: 'btn btn-xs btn-warning' do
+              = render 'per_page_form_group'
+
+            %li
+              = link_to workspace_commits_path, class: 'btn btn-sm btn-warning' do
                 %i.icon-remove-sign
                 Reset
+
+
             %li
-              = button_tag type: 'submit', class: 'btn btn-xs btn-primary' do
+              = button_tag type: 'submit', class: 'btn btn-sm btn-primary' do
                 %i.icon-filter
                 Filter
 

@@ -622,6 +622,20 @@ CREATE TABLE users (
 
 
 --
+-- Name: welcome_page_settings; Type: TABLE; Schema: public; Owner: -; Tablespace: 
+--
+
+CREATE TABLE welcome_page_settings (
+    id integer NOT NULL,
+    welcome_message text,
+    radiator_config json,
+    created_at timestamp without time zone,
+    updated_at timestamp without time zone,
+    CONSTRAINT one_and_only_one CHECK ((id = 0))
+);
+
+
+--
 -- Name: attachments_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
 --
 
@@ -739,6 +753,14 @@ ALTER TABLE ONLY timeout_settings
 
 ALTER TABLE ONLY users
     ADD CONSTRAINT users_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: welcome_page_settings_pkey; Type: CONSTRAINT; Schema: public; Owner: -; Tablespace: 
+--
+
+ALTER TABLE ONLY welcome_page_settings
+    ADD CONSTRAINT welcome_page_settings_pkey PRIMARY KEY (id);
 
 
 --
@@ -1317,4 +1339,6 @@ INSERT INTO schema_migrations (version) VALUES ('81');
 INSERT INTO schema_migrations (version) VALUES ('82');
 
 INSERT INTO schema_migrations (version) VALUES ('84');
+
+INSERT INTO schema_migrations (version) VALUES ('85');
 
