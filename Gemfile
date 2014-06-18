@@ -6,15 +6,15 @@ gem 'activerecord-jdbcpostgresql-adapter',  platform: :jruby
 gem 'activerecord-jdbc-adapter', platform: :jruby
 
 gem 'pg', platform: 'mri'
-gem 'rails', '4.1.0'
+gem 'rails', '4.1.1'
 
 #gem 'torquebox-backstage', platform: :jruby, group: [:development]
 #gem 'twister', :path=> '/Users/thomas/Programming/ROR/twister'
 #gem 'rack-mini-profiler'
 gem 'bcrypt-ruby'
-gem 'bootstrap-sass', '~> 3.1.1'
+gem 'bootstrap-sass'
 gem 'capybara', group: [:test]
-gem 'coffee-rails', '>= 4.0.0'
+gem 'coffee-rails'
 gem 'factory_girl', group: [:development, :test]
 gem 'factory_girl_rails', group: [:development, :staging, :test]
 gem 'faker', group: [:development, :test]
