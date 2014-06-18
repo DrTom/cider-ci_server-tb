@@ -73,7 +73,12 @@ module ApplicationHelper
   end
 
   def markdown(source)
-    Kramdown::Document.new(source).to_html.html_safe
+    begin
+      Kramdown::Document.new(source).to_html.html_safe 
+    rescue Exception => e
+      Rails.logger.error Formatter.exception_to_s e
+      "Markdown render error!"
+    end
   end
 
   def render_executor_row executor, &block
